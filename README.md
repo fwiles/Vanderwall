@@ -38,13 +38,15 @@ Without `INTAKE_WEBHOOK_URL` at build time, the form is hidden and replaced by a
 
 ## Tracking
 
-Optional environment variables are documented in `.env.example`:
+The supplied Google Tag Manager container `GTM-KJ9SMN3` is installed in the head of both landing pages and loads in all environments. Existing `dataLayer` events are available for GTM triggers. Configure tags and publish changes in Google Tag Manager.
+
+Optional direct Google tag environment variables are documented in `.env.example`. Leave these unset when the same tags are managed through GTM to avoid duplicate tracking:
 
 - `GA4_ID`: `G-…`
 - `GOOGLE_ADS_ID`: `AW-…`
 - `GOOGLE_ADS_FORM_LABEL` / `GOOGLE_ADS_CALL_LABEL`: the labels for the two conversion actions.
 
-Google tags load only for Vercel Production builds. A confirmed form delivery emits `generate_lead`; phone clicks emit `click_to_call`. Both include page language and never include form fields. A phone click measures intent to call, not a completed call. A native submission without JavaScript is delivered but does not emit the browser conversion. No IDs were supplied, so tracking is currently inactive. Configure consent handling to match the client's chosen analytics setup before enabling tags if required by that setup.
+The optional direct Google tags load only for Vercel Production builds; the installed GTM snippet loads on both pages in all environments. A confirmed form delivery emits `generate_lead`; phone clicks emit `click_to_call`. Both include page language and never include form fields. A phone click measures intent to call, not a completed call. A native submission without JavaScript is delivered but does not emit the browser conversion. Direct GA4/Ads IDs remain unset; tags within GTM are controlled by the container configuration. Configure consent handling to match the client's chosen analytics setup before enabling tags if required by that setup.
 
 ## Local preview and verification
 

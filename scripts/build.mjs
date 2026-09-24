@@ -33,4 +33,4 @@ for (const language of ['en', 'es']) {
   await writeFile(new URL(`${path}index.html`, output), html);
 }
 await writeFile(new URL('robots.txt', output), 'User-agent: *\nAllow: /\n');
-console.log(`Built English and Spanish pages. Intake: ${config.intakeEnabled ? 'configured' : 'call-only (set INTAKE_WEBHOOK_URL)'}. Tracking: ${production ? 'production configuration' : 'disabled for local/preview'}.`);
+console.log(`Built English and Spanish pages. Intake: ${config.intakeEnabled ? 'configured' : 'call-only (set INTAKE_WEBHOOK_URL)'}. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);
