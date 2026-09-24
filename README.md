@@ -7,7 +7,7 @@ English at `/`, Spanish at `/es/`. Preserves the supplied navy/teal design and r
 1. Import this repository. Use the **repository root** as Root Directory.
 2. Framework Preset: **Other**. The checked-in `vercel.json` sets `npm run build`, output `dist`, and Node 22 is selected by `package.json`.
 3. Set `SITE_URL` to the final HTTPS origin, e.g. `https://immigration.example.com`. Without it, Vercel's production hostname is used if available; local builds omit canonical links.
-4. Deploy. The site works in call-only mode until the intake webhook exists.
+4. Deploy. The form stays visible, with submission disabled and a call instruction until the intake webhook exists.
 5. When ready, add `INTAKE_WEBHOOK_URL` and optionally `INTAKE_WEBHOOK_TOKEN` to the project's environment variables, then **redeploy**. Use a test destination in Preview and the live destination in Production.
 6. Submit one controlled test request to verify delivery in the receiving system before sending paid traffic. Local checks use a mocked receiver; no real intake was submitted.
 
@@ -34,7 +34,7 @@ The function POSTs JSON to your HTTPS endpoint. If set, `INTAKE_WEBHOOK_TOKEN` i
 
 Required name, phone and email are validated server-side. Payload/field limits, an offscreen honeypot and same-origin browser checks are included. Never log case details or credentials. Native form POST works without JavaScript; inline feedback and conversion events require JavaScript.
 
-Without `INTAKE_WEBHOOK_URL` at build time, the form is hidden and replaced by a call instruction; the API returns 503 rather than accepting undeliverable leads.
+Without `INTAKE_WEBHOOK_URL` at build time, the form remains visible, its submit button is disabled, and a call instruction explains that online requests are not yet available; the API returns 503 rather than accepting undeliverable leads.
 
 ## Tracking
 

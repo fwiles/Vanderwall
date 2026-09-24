@@ -27,7 +27,7 @@
   let pending = false;
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    if (pending || !form.reportValidity()) return;
+    if (button.disabled || pending || !form.reportValidity()) return;
     const phone = form.elements.phone;
     phone.setCustomValidity(phone.value.replace(/\D/g, '').length < 7 ? (lang === 'es' ? 'Ingrese un teléfono válido.' : 'Enter a valid phone number.') : '');
     if (!form.reportValidity()) return;

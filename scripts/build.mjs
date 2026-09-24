@@ -25,12 +25,13 @@ for (const language of ['en', 'es']) {
   const metadata = origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/">\n<link rel="alternate" hreflang="es" href="${origin}/es/">\n<link rel="alternate" hreflang="x-default" href="${origin}/">` : '';
   html = html.replace('<!-- DEPLOY_METADATA -->', metadata);
   if (!config.intakeEnabled) {
-    const message = language === 'es' ? 'Para solicitar una consulta, llame al (503) 206-8414.' : 'To request a consultation, please call (503) 206-8414.';
-    html = html.replace(/<form\b/, `<p class="form-status">${message}</p><form hidden`);
+    const message = language === 'es' ? 'Las solicitudes en línea aún no están disponibles. Llame al (503) 206-8414 para solicitar una consulta.' : 'Online requests are not available yet. Please call (503) 206-8414 to request a consultation.';
+    html = html.replace(/<form\b/, `<p class="form-status" id="intake-unavailable">${message}</p><form aria-describedby="intake-unavailable"`);
+    html = html.replace('type="submit"', 'type="submit" disabled aria-describedby="intake-unavailable"');
     html = html.replace(' The form above reaches us any hour.', '').replace(' El formulario de arriba nos llega a cualquier hora.', '');
   }
   await mkdir(new URL(path, output), { recursive: true });
   await writeFile(new URL(`${path}index.html`, output), html);
 }
 await writeFile(new URL('robots.txt', output), 'User-agent: *\nAllow: /\n');
-console.log(`Built English and Spanish pages. Intake: ${config.intakeEnabled ? 'configured' : 'call-only (set INTAKE_WEBHOOK_URL)'}. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);
+console.log(`Built English and Spanish pages. Intake: ${config.intakeEnabled ? 'configured' : 'form visible, submission disabled (set INTAKE_WEBHOOK_URL)'}. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);

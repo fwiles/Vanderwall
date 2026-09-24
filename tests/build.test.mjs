@@ -6,13 +6,20 @@ const build = overrides => execFileSync(process.execPath,['scripts/build.mjs'],{
 test('deployment emits clean bilingual static output and safe configuration', () => {
   try {
     build({});
-    assert.match(readFileSync('dist/index.html','utf8'),/<form hidden/);
+    for (const path of ['dist/index.html', 'dist/es/index.html']) {
+      const page = readFileSync(path, 'utf8');
+      assert.doesNotMatch(page, /<form[^>]*\bhidden\b/);
+      assert.match(page, /type="submit" disabled/);
+      assert.match(page, /id="intake-unavailable"/);
+    }
     assert.match(readFileSync('dist/es/index.html','utf8'),/lang="es"/);
     assert.ok(!existsSync('dist/reference')); assert.ok(!existsSync('dist/copy'));
     build({SITE_URL:'https://landing.example.com',INTAKE_WEBHOOK_URL:'https://secret.example.com/hook',GA4_ID:'G-TEST123',VERCEL_ENV:'production'});
     const html=readFileSync('dist/es/index.html','utf8');
     assert.match(html,/href="https:\/\/landing.example.com\/es\/"/);
-    assert.ok(!html.includes('<form hidden'));
+    assert.doesNotMatch(html, /<form[^>]*\bhidden\b/);
+    assert.ok(!html.includes('intake-unavailable'));
+    assert.ok(!html.includes('type="submit" disabled'));
     const config=readFileSync('dist/config.js','utf8');
     assert.ok(config.includes('G-TEST123')); assert.ok(!config.includes('secret.example'));
     for(const path of ['dist/index.html','dist/es/index.html']) {
