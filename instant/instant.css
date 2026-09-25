@@ -1,0 +1,96 @@
+/* A focused, single-column variant of the existing landing page. */
+.instant-page { background: #F4F8F7; }
+.instant-page [hidden] { display: none !important; }
+.instant-container { max-width: 800px; margin-inline: auto; padding-inline: 24px; }
+.instant-page .site-header { border-bottom: 1px solid rgb(255 255 255 / 14%); }
+.instant-page .site-header__inner { max-width: 1100px; }
+.instant-nav-link { color: var(--white); font-size: 14px; text-decoration: none; }
+.instant-nav-link:hover { text-decoration: underline; }
+.instant-hero { padding: 28px 0 48px; background: var(--navy); color: var(--white); text-align: center; }
+.instant-hero h1 { max-width: 650px; margin: 12px auto; font-size: clamp(1.85rem, 4vw, 2.8rem); line-height: 1.13; font-weight: 600; }
+.instant-hero h1 span { color: var(--teal); }
+.instant-hero p { max-width: 550px; margin-inline: auto; color: var(--on-dark); font-size: 15px; line-height: 1.5; }
+.instant-badges { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; max-width: 560px; margin: 18px auto 0; text-align: left; }
+.instant-badges li { display: flex; align-items: flex-start; gap: 7px; font-size: 12px; line-height: 1.45; }
+.instant-badges .icon { color: var(--teal); width: 15px; height: 15px; margin-top: 1px; }
+.instant-intake { padding-bottom: 48px; }
+.instant-card { position: relative; margin-top: -28px; padding: 34px 40px 28px; border: 1px solid var(--line); border-top: 4px solid var(--teal); border-radius: 10px; background: white; box-shadow: 0 10px 36px rgb(11 56 82 / 8%); }
+.instant-progress { margin-bottom: 26px; }
+.instant-progress__labels { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 12px; color: var(--muted); }
+#step-count { font-weight: 700; color: var(--teal-deep); }
+.instant-progress progress { appearance: none; width: 100%; height: 5px; border: 0; border-radius: 9px; background: var(--mint); display: block; }
+.instant-progress progress::-webkit-progress-bar { border-radius: 9px; background: var(--mint); }
+.instant-progress progress::-webkit-progress-value { border-radius: 9px; background: var(--teal-deep); }
+.instant-progress progress::-moz-progress-bar { border-radius: 9px; background: var(--teal-deep); }
+.instant-step { border: 0; margin: 0 0 30px; padding: 0; min-width: 0; }
+.instant-step legend { padding: 0; font-family: var(--display); font-size: clamp(1.35rem, 3vw, 1.65rem); color: var(--navy-deep); font-weight: 500; line-height: 1.3; }
+.instant-step__hint { font-size: 13px; color: var(--muted); margin: 10px 0 20px; }
+.instant-options { display: grid; gap: 9px; }
+.instant-option { display: flex; align-items: center; gap: 13px; border: 1px solid var(--field-border); border-radius: 5px; padding: 13px 16px; min-height: 52px; font-size: 14px; line-height: 1.5; cursor: pointer; color: var(--ink); background: var(--field-bg); }
+.instant-option:hover { border-color: var(--teal-deep); }
+.instant-option:has(input:checked) { border-color: var(--teal-deep); background: var(--mint); box-shadow: inset 0 0 0 1px var(--teal-deep); }
+.instant-option:has(input:focus-visible) { outline: 3px solid var(--navy); outline-offset: 3px; }
+.instant-option input { margin: 0; width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--teal-deep); }
+.instant-actions { display: flex; gap: 12px; }
+.instant-actions .btn--primary { flex: 1; letter-spacing: .04em; text-transform: none; font-size: 15px; }
+.instant-actions .btn:disabled { opacity: .65; cursor: wait; }
+.instant-contact-fields { display: grid; gap: 18px; }
+.instant-contact-fields label { display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: var(--navy); }
+.instant-contact-fields input { width: 100%; min-height: 52px; border: 1px solid var(--field-border); border-radius: 5px; background: var(--field-bg); padding: 12px; font: 16px var(--sans); color: var(--ink); }
+.instant-permission, .instant-fee-note { font-size: 12px; color: var(--muted); line-height: 1.7; margin-top: 18px; }
+.instant-permission a { color: var(--navy); }
+.instant-fee-note { border-left: 3px solid var(--teal); padding-left: 12px; }
+.instant-reassurance { display: flex; justify-content: center; gap: 7px; align-items: center; font-size: 11px; color: var(--muted); margin-top: 18px; }
+.instant-reassurance .icon { width: 14px; height: 14px; color: var(--teal-deep); }
+.instant-call-note { margin-top: 22px; font-size: 14px; text-align: center; }
+.instant-call-note a { color: var(--navy); font-weight: 700; }
+.instant-call-note span { color: var(--muted); font-size: 12px; }
+.instant-answer-review { margin-top: 22px; padding: 14px; background: var(--mint); border-radius: 5px; font-size: 13px; }
+.instant-answer-review summary { cursor: pointer; color: var(--navy); font-weight: 700; }
+.instant-answer-review dl { margin: 14px 0 0; }
+.instant-answer-review dl div { border-top: 1px solid var(--line); padding: 12px 0; }
+.instant-answer-review dt { font-weight: 700; color: var(--navy); }
+.instant-answer-review dd { margin: 4px 0 0; }
+.instant-answer-review button { color: var(--navy); font: inherit; text-decoration: underline; background: transparent; border: 0; cursor: pointer; padding: 8px 0; min-height: 44px; }
+.instant-error { padding: 14px; background: #FFF0ED; color: #8B3020; border-radius: 4px; margin-bottom: 18px; font-size: 14px; }
+.instant-success { text-align: center; padding: 24px 0; }
+.instant-success h2 { font-size: 32px; color: var(--navy); margin: 16px 0; }
+.instant-success p { max-width: 480px; margin: 0 auto 24px; }
+.instant-success__icon { width: 64px; height: 64px; background: var(--mint); color: var(--teal-deep); border-radius: 50%; display: inline-grid; place-items: center; font-size: 30px; }
+.instant-page .reviews { padding-block: 54px; }
+.instant-page .reviews__head { align-items: center; text-align: center; margin-bottom: 28px; }
+.instant-page .reviews__grid { grid-template-columns: 1fr; gap: 16px; }
+.instant-page .review { padding: 26px 30px; }
+.instant-page .review blockquote { font-size: 15px; }
+.instant-page .reviews__collage { border-radius: 6px; }
+.instant-experience { background: var(--mint); padding: 60px 0; text-align: center; }
+.instant-experience .section-title { margin: 12px 0 28px; }
+.instant-founder { max-width: 540px; margin: auto; }
+.instant-founder img { width: 130px; height: 150px; object-fit: cover; object-position: top; margin: 0 auto 16px; border-radius: 8px; }
+.instant-founder h3 { color: var(--navy); font-size: 25px; }
+.instant-founder__role { color: var(--teal-deep); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin: 4px 0 14px; }
+.instant-founder p:last-child { font-size: 15px; }
+.instant-experience-list { text-align: left; margin: 30px 0; }
+.instant-experience-list li { display: flex; align-items: flex-start; gap: 20px; border-top: 1px solid var(--line); padding-block: 22px; }
+.instant-experience-list li > span { font-family: var(--display); color: var(--teal-deep); font-size: 24px; }
+.instant-experience-list h3 { font-size: 22px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+.instant-experience-list p { font-size: 14px; }
+.instant-page .site-footer__top, .instant-page .site-footer__legal { flex-direction: column; gap: 22px; }
+.instant-page .site-footer__brand { width: auto; }
+.instant-page .site-footer__cols { display: grid; grid-template-columns: 1fr; gap: 22px; }
+.instant-page .site-footer a { color: var(--white); }
+.instant-page .site-footer__legal { align-items: flex-start; }
+@media (max-width: 639px) {
+  .instant-container { padding-inline: 16px; }
+  .instant-hero { padding: 20px 0 44px; }
+  .instant-hero .eyebrow { font-size: 9px; letter-spacing: .13em; }
+  .instant-hero p { font-size: 13px; }
+  .instant-badges { gap: 8px 12px; margin-top: 14px; }
+  .instant-badges li { font-size: 11px; }
+  .instant-card { padding: 24px 20px; }
+  .instant-nav-link { display: none; }
+  .instant-page .site-header__call { font-size: 12px; letter-spacing: 0; }
+  .instant-option { padding: 12px; font-size: 13px; }
+  .instant-page .review { padding: 24px; }
+  .instant-reassurance { font-size: 10px; }
+}

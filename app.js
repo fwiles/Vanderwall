@@ -19,6 +19,7 @@
     if (config.ads && label) gtag('event', 'conversion', { send_to: `${config.ads}/${label}` });
   }
   document.querySelectorAll('[data-call]').forEach(link => link.addEventListener('click', () => track('click_to_call', config.callLabel)));
+  document.addEventListener('instant-lead-confirmed', () => track('generate_lead', config.formLabel), { once: true });
   const hero = document.querySelector('.hero');
   const mobileCta = document.querySelector('.mobile-cta');
   if (hero && mobileCta) {

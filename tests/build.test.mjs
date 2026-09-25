@@ -13,16 +13,25 @@ test('deployment emits clean bilingual static output and safe configuration', ()
       assert.match(page, /id="intake-unavailable"/);
     }
     assert.match(readFileSync('dist/es/index.html','utf8'),/lang="es"/);
+    const instant = readFileSync('dist/instant/index.html', 'utf8');
+    assert.equal((instant.match(/class="instant-step"/g) || []).length, 6);
+    assert.equal((instant.match(/type="radio"/g) || []).length, 21);
+    assert.match(instant, /action="\/api\/instant"/);
+    assert.doesNotMatch(instant, /INSTANT_FORM_FIELDS|intake-unavailable/);
+    assert.ok(existsSync('dist/instant/schema.js'));
+    assert.ok(existsSync('dist/instant/instant.css'));
+    assert.ok(existsSync('dist/instant/instant.js'));
     assert.ok(!existsSync('dist/reference')); assert.ok(!existsSync('dist/copy'));
     build({SITE_URL:'https://landing.example.com',INTAKE_WEBHOOK_URL:'https://secret.example.com/hook',GA4_ID:'G-TEST123',VERCEL_ENV:'production'});
     const html=readFileSync('dist/es/index.html','utf8');
     assert.match(html,/href="https:\/\/landing.example.com\/es\/"/);
+    assert.match(readFileSync('dist/instant/index.html','utf8'), /rel="canonical" href="https:\/\/landing.example.com\/instant\/"/);
     assert.doesNotMatch(html, /<form[^>]*\bhidden\b/);
     assert.ok(!html.includes('intake-unavailable'));
     assert.ok(!html.includes('type="submit" disabled'));
     const config=readFileSync('dist/config.js','utf8');
     assert.ok(config.includes('G-TEST123')); assert.ok(!config.includes('secret.example'));
-    for(const path of ['dist/index.html','dist/es/index.html']) {
+    for(const path of ['dist/index.html','dist/es/index.html','dist/instant/index.html']) {
       const page=readFileSync(path,'utf8');
       const ids=[...page.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
       assert.equal(new Set(ids).size,ids.length);

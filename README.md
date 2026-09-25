@@ -79,3 +79,11 @@ Mock staff initial avatars and the unverified `+18` chip were removed. The found
 - `reference/`: original desktop and mobile artboards.
 
 Run `npm run dev` from the repository root rather than opening the HTML directly: shared assets use root-relative URLs. Production output is generated in `dist/`.
+
+## Instant-form variant
+
+`/instant/` is a separate English, single-column landing page with six form steps, review/edit/back controls, existing testimonials, and founder/experience callouts. It is built from `instant/index.html`, `instant/instant.css`, `instant/instant.js`, and the field mapping in `lib/instant-schema.js`.
+
+`/api/instant` validates the five PDF screening answers plus first name, phone, and email, then submits directly to the provided Lawmatics public form endpoint. It does not use `INTAKE_WEBHOOK_URL`, collect the $150 consultation payment, or book an appointment. Optional UTM attribution is passed without retaining answers in browser storage. A successful delivery uses the existing `generate_lead` tracking event; failed requests retain inputs and allow retry.
+
+See `copy/instant-form-source.md` for exact source details, reconstructed labels, field mapping, and delivery limitations. Automated tests mock Lawmatics. One explicitly approved live test lead was accepted during troubleshooting; see the source notes. The existing `/` and `/es/` intake flow is unchanged. Run `npm run dev` again after changing server routes to pick up the new `/api/instant` handler.

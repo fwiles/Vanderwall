@@ -1,4 +1,5 @@
 import { mkdir, cp, readFile, writeFile, rm } from 'node:fs/promises';
+import { instantFields } from './instant-fields.mjs';
 
 const output = new URL('../dist/', import.meta.url);
 await rm(output, { recursive: true, force: true });
@@ -34,4 +35,10 @@ for (const language of ['en', 'es']) {
   await writeFile(new URL(`${path}index.html`, output), html);
 }
 await writeFile(new URL('robots.txt', output), 'User-agent: *\nAllow: /\n');
+await cp(new URL('../instant/', import.meta.url), new URL('instant/', output), { recursive: true });
+await cp(new URL('../lib/instant-schema.js', import.meta.url), new URL('instant/schema.js', output));
+let instantHtml = await readFile(new URL('../instant/index.html', import.meta.url), 'utf8');
+instantHtml = instantHtml.replace('<!-- INSTANT_FORM_FIELDS -->', instantFields());
+instantHtml = instantHtml.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/instant/">` : '');
+await writeFile(new URL('instant/index.html', output), instantHtml);
 console.log(`Built English and Spanish pages. Intake: ${config.intakeEnabled ? 'configured' : 'form visible, submission disabled (set INTAKE_WEBHOOK_URL)'}. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);
