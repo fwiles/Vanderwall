@@ -32,8 +32,8 @@
   --gold-dark-bg:  #E8C36A;  /* on navy */
 
   /* Type */
-  --display: "Playfair Display", Georgia, "Times New Roman", serif;
-  --sans:    Montserrat, "Helvetica Neue", system-ui, -apple-system, sans-serif;
+  --display: "Oswald", "Helvetica Neue", Arial, sans-serif;
+  --sans:    "Almarai", "Helvetica Neue", Arial, sans-serif;
 
   /* Layout */
   --container: 1180px;
@@ -54,6 +54,7 @@ body {
 }
 img { max-width: 100%; display: block; }
 h1, h2, h3 { margin: 0; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--display); }
 p  { margin: 0; }
 ul { margin: 0; padding: 0; list-style: none; }
 
@@ -292,7 +293,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .founder__role { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--teal-deep); }
 .founder__bio { font-size: clamp(.9375rem, .9rem + .2vw, 1.0625rem); line-height: 1.75; }
 .founder__quote { margin: 0; padding: 22px; background: var(--white); border-radius: var(--radius); }
-.founder__quote p { font-family: var(--display); font-size: clamp(1.1875rem, 1.05rem + .5vw, 1.375rem); line-height: 1.55; font-style: italic; color: var(--navy); }
+.founder__quote p { font-size: clamp(1.1875rem, 1.05rem + .5vw, 1.375rem); line-height: 1.55; font-style: italic; color: var(--navy); }
 
 .team { background: var(--white); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
 .team h3 { font-family: var(--display); font-size: clamp(1.25rem, 1.1rem + .5vw, 1.5rem); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); }
