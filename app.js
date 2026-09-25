@@ -19,6 +19,18 @@
     if (config.ads && label) gtag('event', 'conversion', { send_to: `${config.ads}/${label}` });
   }
   document.querySelectorAll('[data-call]').forEach(link => link.addEventListener('click', () => track('click_to_call', config.callLabel)));
+  const hero = document.querySelector('.hero');
+  const mobileCta = document.querySelector('.mobile-cta');
+  if (hero && mobileCta) {
+    const mobile = window.matchMedia('(max-width: 1023px)');
+    const updateCta = () => {
+      mobileCta.hidden = !mobile.matches || hero.getBoundingClientRect().bottom > 0;
+    };
+    new IntersectionObserver(updateCta, { threshold: 0 }).observe(hero);
+    mobile.addEventListener('change', updateCta);
+    window.addEventListener('pageshow', updateCta);
+    updateCta();
+  }
   const form = document.querySelector('.form');
   if (!form || form.hidden) return;
   const status = document.querySelector('#form-status');

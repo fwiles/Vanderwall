@@ -90,10 +90,10 @@ testimonials) and the firm's Birdeye listing for the rating. Nothing here is inv
 
 ## Reviews
 - **Eyebrow:** Client testimonials · **H2:** 362 reviews. 4.6 stars.
-- Mayra Salinas — "Working with Vanderwall Immigration was one of the best decisions my family and I made."
-- Lyra Starlight — "Without Vanderwall Immigration, I don't think I would've ever gotten my Green Card."
-- Nevaeh Buen — "I highly recommend Vanderwall Immigration. They are very professional and care about their clients."
-- Jacki Winter — "The willingness to help the community is amazing. What an awesome group of people!!"
+- Mayra Salinas — "Working with Vanderwall Immigration was **one of the best decisions my family and I made.**"
+- Lyra Starlight — "Without Vanderwall Immigration, I don’t think I would’ve ever gotten my Green Card. **Thank you for everything, Vanderwall!**"
+- Nevaeh Buen — "I highly recommend Vanderwall immigration. They are **very professional and care about their clients.** They stayed on top of things to make sure my case ran smoothly. **Always communicated with me and kept me informed on my case.** I am very happy with their services."
+- Jacki Winter — "The **willingness to help the community is amazing.** What an awesome group of people!!"
 
 ## FAQ
 1. **How much is the consultation?** $150. If you retain us within 30 days, that $150 applies toward your case opening fee.
@@ -119,3 +119,5 @@ testimonials) and the firm's Birdeye listing for the rating. Nothing here is inv
 - **Hours:** Monday–Friday, 9:00am–5:00pm Pacific
 - **Disclaimer:** Attorney advertising. The information on this page is general and is not legal advice, and prior results do not guarantee a similar outcome. Submitting this form does not create an attorney–client relationship — please do not send confidential information until we have agreed to represent you.
 - © 2026 Vanderwall Immigration
+
+Testimonial source checked September 25, 2026: https://www.vanderwallimmigration.com/ (Nevaeh also appears at https://www.vanderwallimmigration.com/client-testimonials/). The quotes above contain all text published there for these clients; longer original platform reviews were not located for Mayra, Lyra, or Jacki. Bold emphasis is editorial.

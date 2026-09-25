@@ -313,6 +313,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 .reviews { background: var(--white); padding-block: 48px 52px; }
 .reviews__head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px; }
 .reviews__grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.reviews__collage { width: 100%; height: auto; margin-top: clamp(24px, 4vw, 40px); border-radius: var(--radius); }
+.reviews__more { margin-top: 24px; }
+.reviews__more > summary { display: flex; width: fit-content; margin-inline: auto; list-style: none; }
+.reviews__more > summary::-webkit-details-marker { display: none; }
+.reviews__less-label, .reviews__more[open] .reviews__more-label { display: none; }
+.reviews__more[open] .reviews__less-label { display: inline; }
+.reviews__grid--additional { margin-top: 24px; }
 .review { margin: 0; background: var(--mint); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; gap: 12px; }
 .review__mark { font-family: var(--display); font-size: 38px; line-height: .6; color: var(--teal); }
 .review blockquote { margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink); }
@@ -325,6 +332,25 @@ ul { margin: 0; padding: 0; list-style: none; }
   .reviews__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
   .review { padding: 28px; gap: 16px; }
   .review blockquote { font-size: 16px; }
+  .reviews__grid--additional { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Persistent contact actions */
+.mobile-cta { display: none; }
+#consult { scroll-margin-top: 20px; }
+@media (min-width: 1024px) {
+  .site-header { position: sticky; top: 0; z-index: 50; }
+  html { scroll-padding-top: 112px; }
+}
+@media (max-width: 1023px) {
+  body:has(.mobile-cta) { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  .mobile-cta:not([hidden]) {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: var(--navy-deep); box-shadow: 0 -4px 16px rgb(0 0 0 / 15%);
+  }
+  .mobile-cta .btn { min-height: 48px; padding-inline: 8px; font-size: 13px; letter-spacing: .02em; text-transform: none; }
 }
 
 /* --- FAQ ------------------------------------------------------------------ */
