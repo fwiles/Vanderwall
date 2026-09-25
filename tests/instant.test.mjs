@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import handler from '../api/instant.js';
-import { questions, lawmaticsEndpoint } from '../lib/instant-schema.js';
+import { questions, lawmaticsEndpoint, instantForms } from '../lib/instant-schema.js';
 const valid = { first_name: 'Test', phone: '(503) 555-0100', email: 'test@example.com', ...Object.fromEntries(questions.map(q => [q.name, q.options[0][0]])) };
 async function request(body = valid, overrides = {}) {
   const req = { method: 'POST', body, ...overrides, headers: { accept: 'application/json', 'content-type': 'application/json', host: 'example.com', origin: 'https://example.com', ...overrides.headers } };
@@ -23,6 +23,27 @@ test('instant form validates and submits the PDF field mapping', async t => {
     });
     await t.test('accepts every PDF option without silently disqualifying visitors', async () => {
       for (const q of questions) for (const [id] of q.options) assert.equal((await request({ ...valid, [q.name]: id })).statusCode, 200);
+    });
+    await t.test('routes all Spanish PDF options to its own endpoint and localizes responses', async () => {
+      const schema = instantForms.es;
+      const spanish = { first_name: 'Test', phone: '(202) 555-0100', email: 'test@example.com', lang: 'es', ...Object.fromEntries(schema.questions.map(q => [q.name, q.options[0][0]])) };
+      for (const q of schema.questions) for (const [id] of q.options) {
+        const response = await request({ ...spanish, [q.name]: id });
+        assert.equal(response.statusCode, 200);
+        assert.match(JSON.parse(response.body).message, /Recibimos su solicitud/);
+        assert.equal(calls.at(-1).url, schema.lawmaticsEndpoint);
+        assert.equal(calls.at(-1).body[q.name], id);
+        assert.equal(calls.at(-1).body.lang, undefined);
+      }
+      const native = await request(new URLSearchParams(spanish).toString(), { headers: { accept: 'text/html', 'content-type': 'application/x-www-form-urlencoded' } });
+      assert.match(native.body, /lang="es"/);
+      assert.match(native.body, /href="\/es\/instant\/">Volver al formulario/);
+      const before = calls.length;
+      for (const q of schema.questions) for (const value of [undefined, 'unknown']) assert.equal((await request({ ...spanish, [q.name]: value })).statusCode, 400);
+      for (const body of [{ ...valid, lang: 'es' }, { ...spanish, lang: 'en' }, { ...valid, lang: 'fr' }]) assert.equal((await request(body)).statusCode, 400);
+      const invalid = await request({ ...spanish, email: 'test@test' });
+      assert.match(JSON.parse(invalid.body).message, /correo electrónico completo/);
+      assert.equal(calls.length, before);
     });
     await t.test('rejects missing and forged answers before delivery', async () => {
       const before = calls.length;

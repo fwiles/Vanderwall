@@ -37,8 +37,12 @@ for (const language of ['en', 'es']) {
 await writeFile(new URL('robots.txt', output), 'User-agent: *\nAllow: /\n');
 await cp(new URL('../instant/', import.meta.url), new URL('instant/', output), { recursive: true });
 await cp(new URL('../lib/instant-schema.js', import.meta.url), new URL('instant/schema.js', output));
-let instantHtml = await readFile(new URL('../instant/index.html', import.meta.url), 'utf8');
-instantHtml = instantHtml.replace('<!-- INSTANT_FORM_FIELDS -->', instantFields());
-instantHtml = instantHtml.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/instant/">` : '');
-await writeFile(new URL('instant/index.html', output), instantHtml);
+for (const language of ['en', 'es']) {
+  const path = language === 'es' ? 'es/instant/' : 'instant/';
+  let instantHtml = await readFile(new URL(`../${path}index.html`, import.meta.url), 'utf8');
+  instantHtml = instantHtml.replace('<!-- INSTANT_FORM_FIELDS -->', instantFields(language));
+  instantHtml = instantHtml.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/instant/">\n<link rel="alternate" hreflang="es" href="${origin}/es/instant/">` : '');
+  await mkdir(new URL(path, output), { recursive: true });
+  await writeFile(new URL(`${path}index.html`, output), instantHtml);
+}
 console.log(`Built English and Spanish pages. Intake: ${config.intakeEnabled ? 'configured' : 'form visible, submission disabled (set INTAKE_WEBHOOK_URL)'}. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);

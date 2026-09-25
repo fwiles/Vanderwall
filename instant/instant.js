@@ -1,4 +1,15 @@
-import { questions } from './schema.js';
+import { instantForms } from './schema.js';
+const language = document.documentElement.lang === 'es' ? 'es' : 'en';
+const { questions } = instantForms[language];
+const t = language === 'es' ? {
+  phone: 'Ingrese un número de teléfono válido, con código de área o de país.', name: 'Ingrese su nombre.', email: 'Ingrese un correo electrónico completo, como nombre@ejemplo.com.',
+  unanswered: 'Sin respuesta', edit: 'Editar', step: 'Paso', of: 'de', contact: 'Datos de contacto', sending: 'Enviando su solicitud…', submit: 'Solicitar cita',
+  retained: 'Sus respuestas siguen aquí.', failure: 'No pudimos confirmar su solicitud. Sus respuestas siguen aquí. Inténtelo de nuevo o llame al (503) 206-8414.'
+} : {
+  phone: 'Enter a valid phone number, including area or country code.', name: 'Enter your first name.', email: 'Enter a complete email address, such as name@example.com.',
+  unanswered: 'Not answered', edit: 'Edit', step: 'Step', of: 'of', contact: 'Contact details', sending: 'Sending your request…', submit: 'Request Appointment',
+  retained: 'Your answers are still here.', failure: 'We couldn’t confirm your request. Your answers are still here. Try again, or call (503) 206-8414.'
+};
 
 const form = document.querySelector('#instant-form');
 const steps = [...form.querySelectorAll('.instant-step')];
@@ -22,9 +33,9 @@ function validateStep(index) {
   if (index === steps.length - 1) {
     const value = phone.value.trim();
     const digits = value.replace(/\D/g, '');
-    phone.setCustomValidity(digits.length >= 7 && digits.length <= 15 && /^[+\d\s().-]+$/.test(value) ? '' : 'Enter a valid phone number, including area or country code.');
-    form.elements.first_name.setCustomValidity(form.elements.first_name.value.trim() ? '' : 'Enter your first name.');
-    form.elements.email.setCustomValidity(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.elements.email.value.trim()) ? '' : 'Enter a complete email address, such as name@example.com.');
+    phone.setCustomValidity(digits.length >= 7 && digits.length <= 15 && /^[+\d\s().-]+$/.test(value) ? '' : t.phone);
+    form.elements.first_name.setCustomValidity(form.elements.first_name.value.trim() ? '' : t.name);
+    form.elements.email.setCustomValidity(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.elements.email.value.trim()) ? '' : t.email);
   }
   const invalid = [...steps[index].querySelectorAll('input')].find(input => !input.checkValidity());
   if (invalid) { invalid.reportValidity(); return false; }
@@ -38,8 +49,8 @@ function renderSummary() {
     const answer = document.createElement('dd');
     const edit = document.createElement('button');
     title.textContent = q.short;
-    answer.textContent = q.options.find(([value]) => value === form.elements[q.name].value)?.[1] || 'Not answered';
-    edit.type = 'button'; edit.textContent = 'Edit'; edit.setAttribute('aria-label', `Edit ${q.short.toLowerCase()}`);
+    answer.textContent = q.options.find(([value]) => value === form.elements[q.name].value)?.[1] || t.unanswered;
+    edit.type = 'button'; edit.textContent = t.edit; edit.setAttribute('aria-label', `${t.edit} ${q.short.toLowerCase()}`);
     edit.addEventListener('click', () => showStep(index));
     row.append(title, answer, edit); summary.append(row);
   });
@@ -51,10 +62,10 @@ function showStep(index, focus = true) {
   back.hidden = current === 0;
   next.hidden = current === steps.length - 1;
   submit.hidden = !next.hidden;
-  document.querySelector('#step-count').textContent = `Step ${current + 1} of ${steps.length}`;
-  document.querySelector('#step-name').textContent = questions[current]?.short || 'Contact details';
+  document.querySelector('#step-count').textContent = `${t.step} ${current + 1} ${t.of} ${steps.length}`;
+  document.querySelector('#step-name').textContent = questions[current]?.short || t.contact;
   progress.value = current + 1;
-  progress.textContent = `${current + 1} of ${steps.length}`;
+  progress.textContent = `${current + 1} ${t.of} ${steps.length}`;
   clearError();
   if (current === steps.length - 1) renderSummary();
   if (focus) steps[current].querySelector('legend').focus();
@@ -101,8 +112,8 @@ form.addEventListener('submit', async event => {
   form.setAttribute('aria-busy', 'true');
   const controls = [...form.querySelectorAll('input, button')];
   controls.forEach(control => { control.disabled = true; });
-  submit.textContent = 'Sending your request…';
-  let failureMessage = 'We couldn’t confirm your request. Your answers are still here. Try again, or call (503) 206-8414.';
+  submit.textContent = t.sending;
+  let failureMessage = t.failure;
   try {
     const response = await fetch(form.action, {
       method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -110,7 +121,7 @@ form.addEventListener('submit', async event => {
     });
     const result = await response.json();
     if (!response.ok || !result.ok) {
-      if (response.status === 400 && typeof result.message === 'string') failureMessage = `${result.message} Your answers are still here.`;
+      if (response.status === 400 && typeof result.message === 'string') failureMessage = `${result.message} ${t.retained}`;
       console.error('Instant form submission failed', { status: response.status, code: result.code || 'REQUEST_REJECTED' });
       throw new Error('Submission not confirmed');
     }
@@ -124,7 +135,7 @@ form.addEventListener('submit', async event => {
   } finally {
     pending = false;
     controls.forEach(control => { control.disabled = false; });
-    submit.textContent = 'Request Appointment';
+    submit.textContent = t.submit;
     form.removeAttribute('aria-busy');
   }
 });

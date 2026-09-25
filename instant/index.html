@@ -38,6 +38,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <img alt="Vanderwall Immigration" height="169" src="/assets/logo-white.webp" width="600"/>
 </a>
 <div class="site-header__right">
+<a class="instant-language" href="/es/instant/" lang="es">Español</a>
 <a class="instant-nav-link" href="#consult">Get started</a>
 <a class="btn btn--primary site-header__call" data-call="" href="tel:+15032068414">
 <svg aria-hidden="true" class="icon"><use href="#i-phone"></use></svg>
@@ -66,6 +67,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div class="instant-container">
 <div class="instant-card" id="consult">
 <form id="instant-form" action="/api/instant" method="post">
+<input type="hidden" name="lang" value="en">
 <div class="honeypot" aria-hidden="true"><label for="instant-website">Leave this field empty</label><input id="instant-website" name="website" tabindex="-1" autocomplete="off"></div>
 <div class="instant-progress" hidden>
 <div class="instant-progress__labels"><span id="step-count" aria-live="polite">Step 1 of 6</span><span id="step-name">Type of help</span></div>

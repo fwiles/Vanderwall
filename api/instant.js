@@ -1,17 +1,25 @@
-import { questions, lawmaticsEndpoint } from '../lib/instant-schema.js';
+import { instantForms } from '../lib/instant-schema.js';
 
-const messages = {
+const translations = { en: {
   invalid: 'Please complete all questions and check your contact details.',
   invalidEmail: 'Please enter a complete email address, such as name@example.com.',
   invalidPhone: 'Please enter a valid phone number, including area or country code.',
   unavailable: 'We couldn’t confirm your request. Please try again or call (503) 206-8414.',
   success: 'Thank you. Your request was received. Our team will contact you about next steps. Your appointment is not booked yet.'
-};
+}, es: {
+  invalid: 'Complete todas las preguntas y revise sus datos de contacto.',
+  invalidEmail: 'Ingrese un correo electrónico completo, como nombre@ejemplo.com.',
+  invalidPhone: 'Ingrese un número de teléfono válido, incluido el código de área o país.',
+  unavailable: 'No pudimos confirmar su solicitud. Inténtelo de nuevo o llame al (503) 206-8414.',
+  success: 'Gracias. Recibimos su solicitud. Nuestro equipo se comunicará con usted sobre los próximos pasos. Su cita aún no está reservada.'
+} };
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
+  let language = 'en';
   const wantsJson = req.headers.accept?.includes('application/json');
   function reply(code, key, diagnosticCode) {
+    const messages = translations[language];
     if (code >= 400 && code < 500) console.error('Instant form request rejected', { status: code, code: diagnosticCode || 'INVALID_REQUEST' });
     res.statusCode = code;
     if (wantsJson) {
@@ -19,7 +27,7 @@ export default async function handler(req, res) {
       res.end(JSON.stringify({ ok: code === 200, message: messages[key], ...(diagnosticCode ? { code: diagnosticCode } : {}) }));
     } else {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.end(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Vanderwall Immigration</title><link rel="stylesheet" href="/styles.css"></head><body><main class="container" style="padding-block:48px;max-width:760px"><h1>Vanderwall Immigration</h1><p>${messages[key]}</p><p><a href="tel:+15032068414">(503) 206-8414</a></p><p><a href="/instant/">Return to the form</a></p></main></body></html>`);
+      res.end(`<!doctype html><html lang="${language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Vanderwall Immigration</title><link rel="stylesheet" href="/styles.css"></head><body><main class="container" style="padding-block:48px;max-width:760px"><h1>Vanderwall Immigration</h1><p>${messages[key]}</p><p><a href="tel:+15032068414">(503) 206-8414</a></p><p><a href="${language === 'es' ? '/es/instant/' : '/instant/'}">${language === 'es' ? 'Volver al formulario' : 'Return to the form'}</a></p></main></body></html>`);
     }
   }
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return reply(405, 'invalid'); }
@@ -42,6 +50,9 @@ export default async function handler(req, res) {
     data = typeof raw === 'string' ? (type === 'application/json' ? JSON.parse(raw) : Object.fromEntries(new URLSearchParams(raw))) : raw;
     if (!data || typeof data !== 'object' || Array.isArray(data)) return reply(400, 'invalid');
   } catch { return reply(400, 'invalid'); }
+  if (data.lang !== undefined && !['en', 'es'].includes(data.lang)) return reply(400, 'invalid', 'INVALID_LANGUAGE');
+  language = data.lang || 'en';
+  const { questions, lawmaticsEndpoint } = instantForms[language];
   if (data.website) return reply(400, 'invalid', 'SPAM_FIELD_FILLED');
   const lead = {};
   for (const [key, limit] of Object.entries({ first_name: 120, phone: 40, email: 254 })) {
