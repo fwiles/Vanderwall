@@ -23,6 +23,7 @@ const summary = document.querySelector('#answer-summary');
 const phone = form.elements.phone;
 let current = 0;
 let pending = false;
+let ended = false;
 let advanceTimer;
 
 // Native POST remains available without JavaScript; hidden steps are validated here.
@@ -30,18 +31,16 @@ form.noValidate = true;
 form.querySelector('.instant-progress').hidden = false;
 form.querySelector('.instant-answer-review').hidden = false;
 function clearError() { error.hidden = true; error.textContent = ''; }
-function clearScreening() {
-  screening.classList.remove('is-visible');
-  if (location.hash === '#instant-disqualification') {
-    history.replaceState(null, '', location.pathname + location.search);
-  }
-}
 function disqualify() {
+  ended = true;
   clearTimeout(advanceTimer);
-  const blockedStep = questions.findIndex(q => isDisqualified(language, { [q.name]: form.elements[q.name].value }));
-  if (blockedStep !== -1 && blockedStep !== current) showStep(blockedStep, false);
   clearError();
+  // The end step replaces all question, review, and navigation content.
+  for (const child of form.children) child.hidden = child !== screening;
+  form.querySelectorAll('input, button').forEach(control => { control.disabled = true; });
   screening.classList.add('is-visible');
+  // Keep the end state in this page only, so a refresh starts a new form.
+  history.replaceState(null, '', location.pathname + location.search);
   screening.focus();
 }
 function validateStep(index) {
@@ -71,6 +70,7 @@ function renderSummary() {
   });
 }
 function continueStep() {
+  if (ended) return;
   if (!validateStep(current)) return;
   if (isDisqualified(language, { [questions[current].name]: form.elements[questions[current].name].value })) {
     disqualify();
@@ -79,6 +79,7 @@ function continueStep() {
   showStep(current + 1);
 }
 function showStep(index, focus = true) {
+  if (ended) return;
   clearTimeout(advanceTimer);
   current = index;
   steps.forEach((step, i) => { step.hidden = i !== current; });
@@ -90,7 +91,6 @@ function showStep(index, focus = true) {
   progress.value = current + 1;
   progress.textContent = `${current + 1} ${t.of} ${steps.length}`;
   clearError();
-  clearScreening();
   if (current === steps.length - 1) renderSummary();
   if (focus) steps[current].querySelector('legend').focus();
 }
@@ -98,14 +98,13 @@ next.addEventListener('click', () => { if (!pending) continueStep(); });
 back.addEventListener('click', () => { if (!pending) showStep(current - 1); });
 function advanceOnAnswer(event) {
   const input = event.target;
-  if (pending || !(input instanceof HTMLInputElement) || input.type !== 'radio' ||
+  if (ended || pending || !(input instanceof HTMLInputElement) || input.type !== 'radio' ||
       !input.checked || !steps[current].contains(input) || current >= questions.length) return;
   clearTimeout(advanceTimer);
   if (isDisqualified(language, { [input.name]: input.value })) {
     disqualify();
     return;
   }
-  clearScreening();
   const answeredStep = current;
   // Briefly show the selected state before moving focus to the next question.
   advanceTimer = setTimeout(() => {
@@ -121,7 +120,7 @@ form.addEventListener('input', event => {
 });
 form.addEventListener('submit', async event => {
   event.preventDefault();
-  if (pending) return;
+  if (ended || pending) return;
   if (isDisqualified(language, Object.fromEntries(new FormData(form)))) {
     disqualify();
     return;
@@ -171,11 +170,12 @@ form.addEventListener('submit', async event => {
     error.hidden = false; error.focus();
   } finally {
     pending = false;
-    controls.forEach(control => { control.disabled = false; });
+    controls.forEach(control => { control.disabled = ended; });
     submit.textContent = t.submit;
     form.removeAttribute('aria-busy');
   }
 });
 const returnedFromScreening = location.hash === '#instant-disqualification';
+form.reset();
 showStep(0, false);
 if (returnedFromScreening) disqualify();

@@ -1,7 +1,9 @@
 /* A focused, single-column variant of the existing landing page. */
 .instant-page { background: #F4F8F7; }
 .instant-page [hidden] { display: none !important; }
-.instant-screening { display: none; padding: 18px; margin-bottom: 18px; border-left: 3px solid var(--teal-deep); background: var(--mint); color: var(--navy); border-radius: 4px; font-size: 14px; }
+.instant-screening { display: none; padding: 32px 0; margin: 0; text-align: center; color: var(--navy); font-size: 16px; line-height: 1.7; }
+/* Native POST redirects also show only the terminal step, without JavaScript. */
+#instant-form:has(.instant-screening:target) > :not(.instant-screening) { display: none !important; }
 .instant-screening.is-visible, .instant-screening:target { display: block; }
 .instant-container { max-width: 800px; margin-inline: auto; padding-inline: 24px; }
 .instant-page .site-header { border-bottom: 1px solid rgb(255 255 255 / 14%); }
