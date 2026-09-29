@@ -15,13 +15,13 @@ test('deployment emits clean bilingual static output and safe configuration', ()
     assert.match(readFileSync('dist/es/index.html','utf8'),/lang="es"/);
     const instant = readFileSync('dist/instant/index.html', 'utf8');
     assert.equal((instant.match(/class="instant-step"/g) || []).length, 6);
-    assert.equal((instant.match(/type="radio"/g) || []).length, 21);
+    assert.equal((instant.match(/type="radio"/g) || []).length, 25);
     assert.match(instant, /action="\/api\/instant"/);
     assert.doesNotMatch(instant, /INSTANT_FORM_FIELDS|intake-unavailable/);
     const spanish = readFileSync('dist/es/instant/index.html', 'utf8');
     assert.match(spanish, /lang="es"/);
     assert.match(spanish, /name="lang" value="es"/);
-    assert.equal((spanish.match(/type="radio"/g) || []).length, 21);
+    assert.equal((spanish.match(/type="radio"/g) || []).length, 25);
     assert.equal((spanish.match(/class="instant-step"/g) || []).length, 6);
     assert.match(spanish, /name="custom_field_944054"/);
     assert.doesNotMatch(spanish, /INSTANT_FORM_FIELDS/);

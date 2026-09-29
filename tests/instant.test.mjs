@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import handler from '../api/instant.js';
-import { questions, lawmaticsEndpoint, instantForms } from '../lib/instant-schema.js';
+import { questions, lawmaticsEndpoint, instantForms, isDisqualified } from '../lib/instant-schema.js';
 const valid = { first_name: 'Test', phone: '(503) 555-0100', email: 'test@example.com', ...Object.fromEntries(questions.map(q => [q.name, q.options[0][0]])) };
 async function request(body = valid, overrides = {}) {
   const req = { method: 'POST', body, ...overrides, headers: { accept: 'application/json', 'content-type': 'application/json', host: 'example.com', origin: 'https://example.com', ...overrides.headers } };
@@ -21,8 +21,32 @@ test('instant form validates and submits the PDF field mapping', async t => {
       assert.equal(sent.init.redirect, 'error');
       assert.deepEqual(sent.body, { ...valid, utm_source: 'facebook', referring_url: 'https://example.com/instant/' });
     });
-    await t.test('accepts every PDF option without silently disqualifying visitors', async () => {
-      for (const q of questions) for (const [id] of q.options) assert.equal((await request({ ...valid, [q.name]: id })).statusCode, 200);
+    await t.test('screens every English and Spanish answer before delivery', async () => {
+      const blocked = {
+        en: ['1799591', '1799608', 'employment-business-investment', 'student-tourist-exchange', 'agriculture-seasonal'],
+        es: ['1799620', '1799717', 'employment-business-investment', 'student-tourist-exchange', 'agriculture-seasonal']
+      };
+      for (const [lang, schema] of Object.entries(instantForms)) {
+        const baseline = { ...valid, lang, ...Object.fromEntries(schema.questions.map(q => [q.name, q.options[0][0]])) };
+        for (const q of schema.questions) for (const [id] of q.options) {
+          const body = { ...baseline, [q.name]: id };
+          const before = calls.length;
+          const response = await request(body);
+          const result = JSON.parse(response.body);
+          const disqualified = blocked[lang].includes(id);
+          assert.equal(response.statusCode, 200);
+          assert.equal(isDisqualified(lang, body), disqualified);
+          assert.equal(result.qualified, !disqualified);
+          assert.equal(calls.length - before, disqualified ? 0 : 1);
+          if (!disqualified) assert.equal(calls.at(-1).body[q.name], id === 'affirmative-asylum' ? (lang === 'es' ? '1799621' : '1799592') : id);
+          if (disqualified) {
+            assert.equal(result.code, 'NOT_QUALIFIED');
+            const native = await request(new URLSearchParams(body).toString(), { headers: { accept: 'text/html', 'content-type': 'application/x-www-form-urlencoded' } });
+            assert.match(native.body, lang === 'es' ? /Su solicitud no se ha enviado/ : /Your request has not been sent/);
+            assert.equal(calls.length, before);
+          }
+        }
+      }
     });
     await t.test('routes all Spanish PDF options to its own endpoint and localizes responses', async () => {
       const schema = instantForms.es;
@@ -30,9 +54,10 @@ test('instant form validates and submits the PDF field mapping', async t => {
       for (const q of schema.questions) for (const [id] of q.options) {
         const response = await request({ ...spanish, [q.name]: id });
         assert.equal(response.statusCode, 200);
+        if (isDisqualified('es', { ...spanish, [q.name]: id })) continue;
         assert.match(JSON.parse(response.body).message, /Recibimos su solicitud/);
         assert.equal(calls.at(-1).url, schema.lawmaticsEndpoint);
-        assert.equal(calls.at(-1).body[q.name], id);
+        assert.equal(calls.at(-1).body[q.name], q.lawmaticsValues?.[id] || id);
         assert.equal(calls.at(-1).body.lang, undefined);
       }
       const native = await request(new URLSearchParams(spanish).toString(), { headers: { accept: 'text/html', 'content-type': 'application/x-www-form-urlencoded' } });

@@ -1,12 +1,14 @@
-import { instantForms } from '../lib/instant-schema.js';
+import { instantForms, isDisqualified, disqualificationMessages } from '../lib/instant-schema.js';
 
 const translations = { en: {
+  disqualified: disqualificationMessages.en,
   invalid: 'Please complete all questions and check your contact details.',
   invalidEmail: 'Please enter a complete email address, such as name@example.com.',
   invalidPhone: 'Please enter a valid phone number, including area or country code.',
   unavailable: 'We couldn’t confirm your request. Please try again or call (503) 206-8414.',
   success: 'Thank you. Your request was received. Our team will contact you about next steps. Your appointment is not booked yet.'
 }, es: {
+  disqualified: disqualificationMessages.es,
   invalid: 'Complete todas las preguntas y revise sus datos de contacto.',
   invalidEmail: 'Ingrese un correo electrónico completo, como nombre@ejemplo.com.',
   invalidPhone: 'Ingrese un número de teléfono válido, incluido el código de área o país.',
@@ -24,7 +26,7 @@ export default async function handler(req, res) {
     res.statusCode = code;
     if (wantsJson) {
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ ok: code === 200, message: messages[key], ...(diagnosticCode ? { code: diagnosticCode } : {}) }));
+      res.end(JSON.stringify({ ok: code === 200, qualified: code === 200 && key === 'success', message: messages[key], ...(diagnosticCode ? { code: diagnosticCode } : {}) }));
     } else {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.end(`<!doctype html><html lang="${language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Vanderwall Immigration</title><link rel="stylesheet" href="/styles.css"></head><body><main class="container" style="padding-block:48px;max-width:760px"><h1>Vanderwall Immigration</h1><p>${messages[key]}</p><p><a href="tel:+15032068414">(503) 206-8414</a></p><p><a href="${language === 'es' ? '/es/instant/' : '/instant/'}">${language === 'es' ? 'Volver al formulario' : 'Return to the form'}</a></p></main></body></html>`);
@@ -65,8 +67,9 @@ export default async function handler(req, res) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) return reply(400, 'invalidEmail', 'INVALID_EMAIL');
   for (const q of questions) {
     if (typeof data[q.name] !== 'string' || !q.options.some(([id]) => id === data[q.name])) return reply(400, 'invalid', `INVALID_${q.name.toUpperCase()}`);
-    lead[q.name] = data[q.name];
+    lead[q.name] = q.lawmaticsValues?.[data[q.name]] || data[q.name];
   }
+  if (isDisqualified(language, data)) return reply(200, 'disqualified', 'NOT_QUALIFIED');
   for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
     if (data[key] === undefined) continue;
     if (typeof data[key] !== 'string' || data[key].length > 200) return reply(400, 'invalid', 'INVALID_ATTRIBUTION');

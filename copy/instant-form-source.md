@@ -4,7 +4,7 @@ English variant: `/instant/`. Original `/` and `/es/` pages remain separate.
 
 ## Form source
 
-User-provided `/home/fwiles/Downloads/ENGLISH - META FORM.pdf`, read September 25, 2026. Three pages; several question labels and the first two consultation options are visibly truncated. The reconstructed display labels are in `lib/instant-schema.js`. All five custom-field names and all 21 option IDs match the PDF; no qualification option is excluded from submission.
+User-provided `/home/fwiles/Downloads/ENGLISH - META FORM.pdf`, read September 25, 2026. Three pages; several question labels and the first two consultation options are visibly truncated. The reconstructed display labels are in `lib/instant-schema.js`. All five custom-field names and all 21 option IDs match the PDF; these describe the original mapping; the September 29 screening update below supersedes submission behavior.
 
 Order: immigration service, person needing help, their location, hiring intent, willingness to pay for a consultation, then contact details. The $150 consultation fee is taken from option 1799610. The form collects no payment and books no appointment.
 
@@ -50,3 +50,9 @@ On September 25, 2026, the public read-only endpoint `/v1/forms/38523386-dfcf-44
 The documented success response is HTTP 201 with a JSON `data` object. Server diagnostics log only error categories and HTTP status, never submitted values or upstream response bodies. The browser receives a diagnostic code on upstream failure for troubleshooting.
 
 The browser success screen was checked using the captured successful API response, without submitting a second lead. An email-validation mismatch (native browser acceptance of addresses such as test@test versus the server requiring a full domain) was corrected, and server validation errors now produce specific visitor feedback. The original user-reported failure was not reproduced, so its exact cause is not established. The local server was restarted with no-store caching for current assets.
+
+## Client screening update — September 29, 2026
+
+Both languages now disqualify deportation/immigration court/detention, employment/business/investment visas, student/tourist/J-1 visas, agricultural/seasonal visas, and free/pro bono requests. All other choices qualify; no relationship, location, or hiring-intent answer disqualifies a lead. Visitors see a screening message and can revise answers. Disqualified requests are not forwarded to Lawmatics and do not emit a lead conversion. The server enforces the same rules, including for native POST.
+
+Public Lawmatics metadata rechecked September 29 still lists the original eight service choices. The three added disqualifying service choices use local string IDs that are never forwarded. Affirmative Asylum is a separate visible choice mapped to the existing Asylum option (English 1799592; Spanish 1799621). This temporary broader CRM mapping should be replaced if separate option IDs are supplied. Spanish labels for added choices are translations of the client's English wording. English question and consultation wording now matches the client's full copy, including $150 for 45 minutes.

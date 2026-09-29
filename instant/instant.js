@@ -1,4 +1,4 @@
-import { instantForms } from './schema.js';
+import { instantForms, isDisqualified, disqualificationMessages } from './schema.js';
 const language = document.documentElement.lang === 'es' ? 'es' : 'en';
 const { questions } = instantForms[language];
 const t = language === 'es' ? {
@@ -55,6 +55,16 @@ function renderSummary() {
     row.append(title, answer, edit); summary.append(row);
   });
 }
+function continueStep() {
+  if (!validateStep(current)) return;
+  if (isDisqualified(language, { [questions[current].name]: form.elements[questions[current].name].value })) {
+    error.textContent = disqualificationMessages[language];
+    error.hidden = false;
+    error.focus();
+    return;
+  }
+  showStep(current + 1);
+}
 function showStep(index, focus = true) {
   clearTimeout(advanceTimer);
   current = index;
@@ -70,7 +80,7 @@ function showStep(index, focus = true) {
   if (current === steps.length - 1) renderSummary();
   if (focus) steps[current].querySelector('legend').focus();
 }
-next.addEventListener('click', () => { if (!pending && validateStep(current)) showStep(current + 1); });
+next.addEventListener('click', () => { if (!pending) continueStep(); });
 back.addEventListener('click', () => { if (!pending) showStep(current - 1); });
 function advanceOnAnswer(event) {
   const input = event.target;
@@ -80,7 +90,7 @@ function advanceOnAnswer(event) {
   const answeredStep = current;
   // Briefly show the selected state before moving focus to the next question.
   advanceTimer = setTimeout(() => {
-    if (!pending && current === answeredStep && validateStep(current)) showStep(current + 1);
+    if (!pending && current === answeredStep) continueStep();
   }, 180);
 }
 form.addEventListener('change', advanceOnAnswer);
@@ -93,7 +103,7 @@ form.addEventListener('input', event => {
 form.addEventListener('submit', async event => {
   event.preventDefault();
   if (pending) return;
-  if (current < steps.length - 1) { if (validateStep(current)) showStep(current + 1); return; }
+  if (current < steps.length - 1) { continueStep(); return; }
   for (let i = 0; i < steps.length; i++) {
     // Reveal invalid steps before native validation tries to focus their controls.
     const invalid = [...steps[i].querySelectorAll('input')].some(input => !input.checkValidity());
@@ -124,6 +134,12 @@ form.addEventListener('submit', async event => {
       if (response.status === 400 && typeof result.message === 'string') failureMessage = `${result.message} ${t.retained}`;
       console.error('Instant form submission failed', { status: response.status, code: result.code || 'REQUEST_REJECTED' });
       throw new Error('Submission not confirmed');
+    }
+    if (result.qualified === false) {
+      showStep(0);
+      error.textContent = disqualificationMessages[language];
+      error.hidden = false; error.focus();
+      return;
     }
     form.hidden = true;
     const success = document.querySelector('#instant-success');
