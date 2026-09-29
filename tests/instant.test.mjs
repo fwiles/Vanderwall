@@ -42,7 +42,9 @@ test('instant form validates and submits the PDF field mapping', async t => {
           if (disqualified) {
             assert.equal(result.code, 'NOT_QUALIFIED');
             const native = await request(new URLSearchParams(body).toString(), { headers: { accept: 'text/html', 'content-type': 'application/x-www-form-urlencoded' } });
-            assert.match(native.body, lang === 'es' ? /Su solicitud no se ha enviado/ : /Your request has not been sent/);
+            assert.equal(native.statusCode, 303);
+            assert.equal(native.headers.Location, lang === 'es' ? '/es/instant/disqualified/' : '/instant/disqualified/');
+            assert.equal(native.body, undefined);
             assert.equal(calls.length, before);
           }
         }

@@ -1,4 +1,4 @@
-import { instantForms, isDisqualified, disqualificationMessages } from './schema.js';
+import { instantForms, isDisqualified, disqualificationPaths } from './schema.js';
 const language = document.documentElement.lang === 'es' ? 'es' : 'en';
 const { questions } = instantForms[language];
 const t = language === 'es' ? {
@@ -29,6 +29,13 @@ form.noValidate = true;
 form.querySelector('.instant-progress').hidden = false;
 form.querySelector('.instant-answer-review').hidden = false;
 function clearError() { error.hidden = true; error.textContent = ''; }
+function disqualify() {
+  clearTimeout(advanceTimer);
+  pending = true;
+  form.hidden = true;
+  // Replace the form in history so Back does not reopen this screening attempt.
+  location.replace(disqualificationPaths[language]);
+}
 function validateStep(index) {
   if (index === steps.length - 1) {
     const value = phone.value.trim();
@@ -58,9 +65,7 @@ function renderSummary() {
 function continueStep() {
   if (!validateStep(current)) return;
   if (isDisqualified(language, { [questions[current].name]: form.elements[questions[current].name].value })) {
-    error.textContent = disqualificationMessages[language];
-    error.hidden = false;
-    error.focus();
+    disqualify();
     return;
   }
   showStep(current + 1);
@@ -87,6 +92,10 @@ function advanceOnAnswer(event) {
   if (pending || !(input instanceof HTMLInputElement) || input.type !== 'radio' ||
       !input.checked || !steps[current].contains(input) || current >= questions.length) return;
   clearTimeout(advanceTimer);
+  if (isDisqualified(language, { [input.name]: input.value })) {
+    disqualify();
+    return;
+  }
   const answeredStep = current;
   // Briefly show the selected state before moving focus to the next question.
   advanceTimer = setTimeout(() => {
@@ -103,6 +112,10 @@ form.addEventListener('input', event => {
 form.addEventListener('submit', async event => {
   event.preventDefault();
   if (pending) return;
+  if (isDisqualified(language, Object.fromEntries(new FormData(form)))) {
+    disqualify();
+    return;
+  }
   if (current < steps.length - 1) { continueStep(); return; }
   for (let i = 0; i < steps.length; i++) {
     // Reveal invalid steps before native validation tries to focus their controls.
@@ -136,9 +149,7 @@ form.addEventListener('submit', async event => {
       throw new Error('Submission not confirmed');
     }
     if (result.qualified === false) {
-      showStep(0);
-      error.textContent = disqualificationMessages[language];
-      error.hidden = false; error.focus();
+      disqualify();
       return;
     }
     form.hidden = true;

@@ -28,6 +28,12 @@ test('deployment emits clean bilingual static output and safe configuration', ()
     assert.ok(existsSync('dist/instant/schema.js'));
     assert.ok(existsSync('dist/instant/instant.css'));
     assert.ok(existsSync('dist/instant/instant.js'));
+    for (const [lang, path] of [['en', 'dist/instant/disqualified/index.html'], ['es', 'dist/es/instant/disqualified/index.html']]) {
+      const page = readFileSync(path, 'utf8');
+      assert.ok(page.includes(`lang="${lang}"`));
+      assert.match(page, lang === 'es' ? /Su solicitud no se ha enviado/ : /Your request has not been sent/);
+      assert.doesNotMatch(page, /<(?:a|button|form)\b|go back|Puede volver/i);
+    }
     assert.ok(!existsSync('dist/reference')); assert.ok(!existsSync('dist/copy'));
     build({SITE_URL:'https://landing.example.com',INTAKE_WEBHOOK_URL:'https://secret.example.com/hook',GA4_ID:'G-TEST123',VERCEL_ENV:'production'});
     const html=readFileSync('dist/es/index.html','utf8');

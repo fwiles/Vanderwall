@@ -1,4 +1,4 @@
-import { instantForms, isDisqualified, disqualificationMessages } from '../lib/instant-schema.js';
+import { instantForms, isDisqualified, disqualificationMessages, disqualificationPaths } from '../lib/instant-schema.js';
 
 const translations = { en: {
   disqualified: disqualificationMessages.en,
@@ -28,6 +28,12 @@ export default async function handler(req, res) {
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ ok: code === 200, qualified: code === 200 && key === 'success', message: messages[key], ...(diagnosticCode ? { code: diagnosticCode } : {}) }));
     } else {
+      if (key === 'disqualified') {
+        res.statusCode = 303;
+        res.setHeader('Location', disqualificationPaths[language]);
+        res.end();
+        return;
+      }
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.end(`<!doctype html><html lang="${language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Vanderwall Immigration</title><link rel="stylesheet" href="/styles.css"></head><body><main class="container" style="padding-block:48px;max-width:760px"><h1>Vanderwall Immigration</h1><p>${messages[key]}</p><p><a href="tel:+15032068414">(503) 206-8414</a></p><p><a href="${language === 'es' ? '/es/instant/' : '/instant/'}">${language === 'es' ? 'Volver al formulario' : 'Return to the form'}</a></p></main></body></html>`);
     }
