@@ -1,4 +1,4 @@
-import { instantForms, isDisqualified, disqualificationPaths } from './schema.js';
+import { instantForms, isDisqualified } from './schema.js';
 const language = document.documentElement.lang === 'es' ? 'es' : 'en';
 const { questions } = instantForms[language];
 const t = language === 'es' ? {
@@ -17,6 +17,7 @@ const next = document.querySelector('#instant-next');
 const back = document.querySelector('#instant-back');
 const submit = document.querySelector('#instant-submit');
 const error = document.querySelector('#instant-error');
+const screening = document.querySelector('#instant-disqualification');
 const progress = document.querySelector('#step-progress');
 const summary = document.querySelector('#answer-summary');
 const phone = form.elements.phone;
@@ -29,12 +30,19 @@ form.noValidate = true;
 form.querySelector('.instant-progress').hidden = false;
 form.querySelector('.instant-answer-review').hidden = false;
 function clearError() { error.hidden = true; error.textContent = ''; }
+function clearScreening() {
+  screening.classList.remove('is-visible');
+  if (location.hash === '#instant-disqualification') {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+}
 function disqualify() {
   clearTimeout(advanceTimer);
-  pending = true;
-  form.hidden = true;
-  // Replace the form in history so Back does not reopen this screening attempt.
-  location.replace(disqualificationPaths[language]);
+  const blockedStep = questions.findIndex(q => isDisqualified(language, { [q.name]: form.elements[q.name].value }));
+  if (blockedStep !== -1 && blockedStep !== current) showStep(blockedStep, false);
+  clearError();
+  screening.classList.add('is-visible');
+  screening.focus();
 }
 function validateStep(index) {
   if (index === steps.length - 1) {
@@ -82,6 +90,7 @@ function showStep(index, focus = true) {
   progress.value = current + 1;
   progress.textContent = `${current + 1} ${t.of} ${steps.length}`;
   clearError();
+  clearScreening();
   if (current === steps.length - 1) renderSummary();
   if (focus) steps[current].querySelector('legend').focus();
 }
@@ -96,6 +105,7 @@ function advanceOnAnswer(event) {
     disqualify();
     return;
   }
+  clearScreening();
   const answeredStep = current;
   // Briefly show the selected state before moving focus to the next question.
   advanceTimer = setTimeout(() => {
@@ -166,4 +176,6 @@ form.addEventListener('submit', async event => {
     form.removeAttribute('aria-busy');
   }
 });
+const returnedFromScreening = location.hash === '#instant-disqualification';
 showStep(0, false);
+if (returnedFromScreening) disqualify();

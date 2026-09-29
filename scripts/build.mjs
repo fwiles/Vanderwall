@@ -42,32 +42,10 @@ for (const language of ['en', 'es']) {
   const path = language === 'es' ? 'es/instant/' : 'instant/';
   let instantHtml = await readFile(new URL(`../${path}index.html`, import.meta.url), 'utf8');
   instantHtml = instantHtml.replace('<!-- INSTANT_FORM_FIELDS -->', instantFields(language));
+  instantHtml = instantHtml.replace('<!-- INSTANT_DISQUALIFICATION -->', `<p id="instant-disqualification" class="instant-screening" role="alert" tabindex="-1">${disqualificationMessages[language]}</p>`);
   instantHtml = instantHtml.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/instant/">\n<link rel="alternate" hreflang="es" href="${origin}/es/instant/">` : '');
   await mkdir(new URL(path, output), { recursive: true });
   await writeFile(new URL(`${path}index.html`, output), instantHtml);
-  const title = language === 'es' ? 'No podemos ofrecerle una consulta' : 'We’re unable to offer a consultation';
-  await mkdir(new URL(`${path}disqualified/`, output), { recursive: true });
-  await writeFile(new URL(`${path}disqualified/index.html`, output), `<!doctype html>
-<html lang="${language}">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>${title} | Vanderwall Immigration</title>
-<link rel="stylesheet" href="/styles.css">
-<link rel="stylesheet" href="/instant/instant.css">
-</head>
-<body class="instant-page">
-<header class="site-header"><div class="container site-header__inner">
-<span class="site-header__logo"><img alt="Vanderwall Immigration" height="169" width="600" src="/assets/logo-white.webp"></span>
-</div></header>
-<main class="instant-container instant-disqualified">
-<div class="instant-card">
-<h1>${title}</h1>
-<p>${disqualificationMessages[language]}</p>
-</div>
-</main>
-</body>
-</html>`);
+
 }
 console.log(`Built English and Spanish pages. Intake: ${config.intakeEnabled ? 'configured' : 'form visible, submission disabled (set INTAKE_WEBHOOK_URL)'}. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);
