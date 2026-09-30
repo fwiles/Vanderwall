@@ -6,7 +6,7 @@ import handler from '../api/consultation.js';
 import instantHandler from '../api/instant.js';
 const root = resolve('dist');
 const port = Number(process.env.PORT || 3000);
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.txt': 'text/plain' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.png': 'image/png', '.ico': 'image/x-icon', '.txt': 'text/plain' };
 createServer(async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   const url = new URL(req.url, 'http://localhost');

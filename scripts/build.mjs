@@ -6,7 +6,7 @@ const output = new URL('../dist/', import.meta.url);
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(new URL('../assets/', import.meta.url), new URL('assets/', output), { recursive: true });
-for (const name of ['styles.css', 'app.js', '404.html']) {
+for (const name of ['styles.css', 'app.js', '404.html', 'favicon.ico']) {
   await cp(new URL(`../${name}`, import.meta.url), new URL(name, output));
 }
 let origin = process.env.SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : '');
