@@ -454,3 +454,16 @@ ul { margin: 0; padding: 0; list-style: none; }
   .form-card__title { font-size: 1.35rem; }
   .form { gap: 12px; }
 }
+
+/* Dedicated booking pages give the Lawmatics form the full content width. */
+.booking { min-height: calc(100vh - 90px); padding-block: 32px 48px; background: var(--mint); }
+.booking__back { display: inline-flex; align-items: center; min-height: 44px; color: var(--navy); }
+.booking__title { max-width: 900px; margin: 20px auto 32px; text-align: center; color: var(--navy); font-size: clamp(1.65rem, 3.5vw, 2.65rem); line-height: 1.2; }
+.booking__embed { min-height: 65vh; padding: 24px; background: var(--white); border-radius: 12px; }
+.booking__embed iframe { width: 100%; max-width: 100%; border: 0; }
+.booking__help { margin-top: 24px; text-align: center; color: var(--navy); }
+.booking__help a { color: inherit; font-weight: 700; }
+@media (max-width: 767px) {
+  .booking { padding-block: 16px 32px; }
+  .booking__embed { padding: 8px; }
+}

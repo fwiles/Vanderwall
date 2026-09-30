@@ -9,8 +9,22 @@ test('deployment emits clean bilingual static output and safe configuration', ()
     for (const path of ['dist/index.html', 'dist/es/index.html']) {
       const page = readFileSync(path, 'utf8');
       assert.doesNotMatch(page, /<form[^>]*\bhidden\b/);
-      assert.match(page, /type="submit" disabled/);
-      assert.match(page, /id="intake-unavailable"/);
+      assert.doesNotMatch(page, /type="submit" disabled/);
+      assert.doesNotMatch(page, /id="intake-unavailable"|\$150|name="(?:name|phone|email|case_type|message)"/);
+      assert.match(page, /<form action="\/(?:es\/)?book\/" class="form" method="get" autocomplete="off">/);
+      const form = page.match(/<form[\s\S]*?<\/form>/)[0];
+      assert.doesNotMatch(form, /\bname=/, 'intro answers must never be submitted, including without JS');
+      assert.match(form, /<select id="f-case" required="">/);
+      assert.match(form, /<textarea[^>]*required=""/);
+    }
+    for (const [path, id, lang] of [
+      ['dist/book/index.html', '8c824c55-e3b4-433b-ba13-23c1598e96a5', 'en'],
+      ['dist/es/book/index.html', 'e5de6d79-14ee-4b31-98c9-0f3defac6c7b', 'es']
+    ]) {
+      const booking = readFileSync(path, 'utf8');
+      assert.ok(booking.includes(`lm_intake("${id}", "lm-embedded-script", {});`));
+      assert.ok(booking.includes(`lang="${lang}"`));
+      assert.match(booking, /https:\/\/navi.lawmatics.com\/intake.min.js/);
     }
     assert.match(readFileSync('dist/es/index.html','utf8'),/lang="es"/);
     const instant = readFileSync('dist/instant/index.html', 'utf8');
@@ -46,7 +60,7 @@ test('deployment emits clean bilingual static output and safe configuration', ()
     assert.ok(!html.includes('type="submit" disabled'));
     const config=readFileSync('dist/config.js','utf8');
     assert.ok(config.includes('G-TEST123')); assert.ok(!config.includes('secret.example'));
-    for(const path of ['dist/index.html','dist/es/index.html','dist/instant/index.html','dist/es/instant/index.html']) {
+    for(const path of ['dist/index.html','dist/es/index.html','dist/instant/index.html','dist/es/instant/index.html','dist/book/index.html','dist/es/book/index.html']) {
       const page=readFileSync(path,'utf8');
       const ids=[...page.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
       assert.equal(new Set(ids).size,ids.length);

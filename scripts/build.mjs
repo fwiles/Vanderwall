@@ -26,12 +26,12 @@ for (const language of ['en', 'es']) {
   let html = await readFile(new URL(`../${path}index.html`, import.meta.url), 'utf8');
   const metadata = origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/">\n<link rel="alternate" hreflang="es" href="${origin}/es/">\n<link rel="alternate" hreflang="x-default" href="${origin}/">` : '';
   html = html.replace('<!-- DEPLOY_METADATA -->', metadata);
-  if (!config.intakeEnabled) {
-    const message = language === 'es' ? 'Las solicitudes en línea aún no están disponibles. Llame al (503) 206-8414 para solicitar una consulta.' : 'Online requests are not available yet. Please call (503) 206-8414 to request a consultation.';
-    html = html.replace(/<form\b/, `<p class="form-status" id="intake-unavailable">${message}</p><form aria-describedby="intake-unavailable"`);
-    html = html.replace('type="submit"', 'type="submit" disabled aria-describedby="intake-unavailable"');
-    html = html.replace(' The form above reaches us any hour.', '').replace(' El formulario de arriba nos llega a cualquier hora.', '');
-  }
+  await mkdir(new URL(path, output), { recursive: true });
+  await writeFile(new URL(`${path}index.html`, output), html);
+}
+for (const path of ['book/', 'es/book/']) {
+  let html = await readFile(new URL(`../${path}index.html`, import.meta.url), 'utf8');
+  html = html.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/book/">\n<link rel="alternate" hreflang="es" href="${origin}/es/book/">` : '');
   await mkdir(new URL(path, output), { recursive: true });
   await writeFile(new URL(`${path}index.html`, output), html);
 }
@@ -48,4 +48,4 @@ for (const language of ['en', 'es']) {
   await writeFile(new URL(`${path}index.html`, output), instantHtml);
 
 }
-console.log(`Built English and Spanish pages. Intake: ${config.intakeEnabled ? 'configured' : 'form visible, submission disabled (set INTAKE_WEBHOOK_URL)'}. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);
+console.log(`Built English and Spanish landing, booking and instant-form pages. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);

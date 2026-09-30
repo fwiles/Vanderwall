@@ -7,13 +7,18 @@ English at `/`, Spanish at `/es/`. Preserves the supplied navy/teal design and r
 1. Import this repository. Use the **repository root** as Root Directory.
 2. Framework Preset: **Other**. The checked-in `vercel.json` sets `npm run build`, output `dist`, and Node 22 is selected by `package.json`.
 3. Set `SITE_URL` to the final HTTPS origin, e.g. `https://immigration.example.com`. Without it, Vercel's production hostname is used if available; local builds omit canonical links.
-4. Deploy. The form stays visible, with submission disabled and a call instruction until the intake webhook exists.
-5. When ready, add `INTAKE_WEBHOOK_URL` and optionally `INTAKE_WEBHOOK_TOKEN` to the project's environment variables, then **redeploy**. Use a test destination in Preview and the live destination in Production.
-6. Submit one controlled test request to verify delivery in the receiving system before sending paid traffic. Local checks use a mocked receiver; no real intake was submitted.
+4. Deploy. The main English and Spanish pages lead to `/book/` and `/es/book/`, which load the supplied language-specific Lawmatics booking embeds. No intake webhook is required for this flow.
+5. Verify the live embeds and booking configuration before sending paid traffic.
+
+## Two-question booking flow
+
+The main landing pages ask only what the visitor needs help with and a brief description. Both questions are required to continue. These introductory answers are deliberately not saved, transmitted, included in URLs, or passed to Lawmatics. The controls have no `name` attributes, so native GET navigation also excludes their values when JavaScript is unavailable. The booking embed itself requires JavaScript and includes a phone fallback.
+
+Booking pages use the full content width and the requested free intake appointment heading, translated on the Spanish page. Continuing to booking does not emit a lead conversion; completion tracking must be configured with Lawmatics. The `/instant/` variants retain their separate existing intake flow.
 
 `dist` contains only public page assets. Copy decks, design references, tests and secrets are not copied into the static output. `/api/consultation` is deployed as a Vercel Function from the root `api` folder. The site is deliberately `noindex, follow`, including an HTTP header, for paid traffic. No production deployment has been performed.
 
-## Webhook contract
+## Legacy consultation API contract
 
 The function POSTs JSON to your HTTPS endpoint. If set, `INTAKE_WEBHOOK_TOKEN` is sent as `Authorization: Bearer <token>`. It never reaches the browser.
 
@@ -34,7 +39,7 @@ The function POSTs JSON to your HTTPS endpoint. If set, `INTAKE_WEBHOOK_TOKEN` i
 
 Required name, phone and email are validated server-side. Payload/field limits, an offscreen honeypot and same-origin browser checks are included. Never log case details or credentials. Native form POST works without JavaScript; inline feedback and conversion events require JavaScript.
 
-Without `INTAKE_WEBHOOK_URL` at build time, the form remains visible, its submit button is disabled, and a call instruction explains that online requests are not yet available; the API returns 503 rather than accepting undeliverable leads.
+The legacy `/api/consultation` endpoint is no longer used by the main landing pages. It still requires `INTAKE_WEBHOOK_URL` and returns 503 when unconfigured.
 
 ## Tracking
 
@@ -56,7 +61,7 @@ npm test
 npm run dev
 ```
 
-Open `http://localhost:3000` and `/es/`. For a configured local form, copy `.env.example` to `.env.local`, set a test webhook, and restart `npm run dev`. Build: `npm run build`. No third-party package dependencies are needed.
+Open `http://localhost:3000` and `/es/`. The main booking flow needs no local webhook configuration. Build: `npm run build`. No third-party package dependencies are needed.
 
 Tests cover bilingual output, anchors/assets, deployment configuration, validation, spam, unsupported requests, native form submissions, webhook acceptance and failure. Browser checks were performed separately at 360, 390, 768, 1024 and 1440px; see the task handoff for results.
 
@@ -73,7 +78,8 @@ Mock staff initial avatars and the unverified `+18` chip were removed. The found
 - `index.html`: English page.
 - `es/index.html`: Spanish page, adapted from the supplied Spanish copy deck.
 - `styles.css`: shared responsive design.
-- `app.js`: progressive form handling and conversion events.
+- `app.js`: phone/instant-form conversion events and mobile call controls.
+- `book/index.html` and `es/book/index.html`: language-specific Lawmatics booking pages.
 - `assets/`: supplied images and an optimized founder image.
 - `copy/`: original copy decks and source notes.
 - `reference/`: original desktop and mobile artboards.
@@ -86,4 +92,4 @@ Run `npm run dev` from the repository root rather than opening the HTML directly
 
 `/api/instant` validates the five screening answers plus first name, phone, and email, then submits directly to the appropriate English or Spanish Lawmatics public form endpoint, selected from the validated `lang` field. It does not use `INTAKE_WEBHOOK_URL`, collect the $150 consultation payment, or book an appointment. Optional UTM attribution is passed without retaining answers in browser storage. Client disqualification rules apply in both languages: deportation/court/detention, employment/business/investment visas, student/tourist/J-1 visas, agricultural/seasonal visas, and free/pro bono requests stop the form and are not delivered to Lawmatics. All other listed choices qualify, including either location and all hiring-intent choices. Disqualified visitors immediately reach a terminal step inside the form, with questions and all back/edit/continue controls removed; the API also enforces screening for native POST and direct requests. Affirmative Asylum is displayed separately and maps to the existing Asylum CRM option because the public forms have no separate ID. A successful qualified delivery uses the existing `generate_lead` tracking event; failed requests retain inputs and allow retry.
 
-See `copy/instant-form-source.md` and `copy/instant-form-es-source.md` for exact source details, reconstructed labels, field mapping, and delivery limitations. Automated tests mock Lawmatics. One explicitly approved live test lead was accepted during troubleshooting; see the source notes. The existing `/` and `/es/` intake flow is unchanged. Run `npm run dev` again after changing server routes to pick up the new `/api/instant` handler.
+See `copy/instant-form-source.md` and `copy/instant-form-es-source.md` for exact source details, reconstructed labels, field mapping, and delivery limitations. Automated tests mock Lawmatics. One explicitly approved live test lead was accepted during troubleshooting; see the source notes. The `/` and `/es/` pages use the separate two-question booking flow described above. Run `npm run dev` again after changing server routes to pick up the new `/api/instant` handler.

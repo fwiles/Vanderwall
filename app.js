@@ -32,35 +32,4 @@
     window.addEventListener('pageshow', updateCta);
     updateCta();
   }
-  const form = document.querySelector('.form');
-  if (!form || form.hidden) return;
-  const status = document.querySelector('#form-status');
-  const button = form.querySelector('button[type="submit"]');
-  const buttonText = button.textContent;
-  let pending = false;
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    if (button.disabled || pending || !form.reportValidity()) return;
-    const phone = form.elements.phone;
-    phone.setCustomValidity(phone.value.replace(/\D/g, '').length < 7 ? (lang === 'es' ? 'Ingrese un teléfono válido.' : 'Enter a valid phone number.') : '');
-    if (!form.reportValidity()) return;
-    pending = true; button.disabled = true;
-    button.textContent = lang === 'es' ? 'Enviando…' : 'Sending…';
-    form.setAttribute('aria-busy', 'true'); status.textContent = '';
-    try {
-      const response = await fetch(form.action, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))), signal: AbortSignal.timeout(15000) });
-      const result = await response.json();
-      if (!response.ok || !result.ok) throw new Error(result.message || '');
-      status.textContent = result.message; status.dataset.state = 'success';
-      form.hidden = true;
-      track('generate_lead', config.formLabel);
-    } catch (error) {
-      status.dataset.state = 'error';
-      status.textContent = lang === 'es' ? 'No se pudo confirmar su solicitud. Inténtelo de nuevo o llame al (503) 206-8414.' : 'Your request could not be confirmed. Please try again or call (503) 206-8414.';
-    } finally {
-      pending = false; button.disabled = false; button.textContent = buttonText;
-      form.removeAttribute('aria-busy'); status.focus();
-    }
-  });
-  form.elements.phone.addEventListener('input', () => form.elements.phone.setCustomValidity(''));
 })();

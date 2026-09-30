@@ -12,7 +12,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Immigration Attorneys in Beaverton &amp; Salem, Oregon | Vanderwall Immigration</title>
-<meta content="Green cards, citizenship, asylum, DACA, work permits and deportation defense. Fixed fees, payment plans, six languages in-house. Schedule a consultation: (503) 206-8414." name="description"/>
+<meta content="Green cards, citizenship, asylum, DACA, work permits and deportation defense. Fixed fees, payment plans, six languages in-house. Book a free appointment with our intake team: (503) 206-8414." name="description"/>
 <meta content="noindex, follow" name="robots"/>
 <!-- DEPLOY_METADATA -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -79,27 +79,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div>
 <h2 class="form-card__title">Let’s talk about your case</h2>
 <hr class="rule" style="margin: 10px 0;"/>
-<p class="form-card__note">The consultation is <strong>$150</strong>, and it applies toward your case opening fee if you retain us within 30 days.</p>
+<p class="form-card__note">Answer two quick questions, then book a free appointment with our intake team.</p>
 </div>
 
-<form action="/api/consultation" class="form" method="post"><input name="lang" type="hidden" value="en"/><div aria-hidden="true" class="honeypot"><label for="f-website">Leave this field empty</label><input autocomplete="off" id="f-website" name="website" tabindex="-1" type="text"/></div>
-<div class="field">
-<label for="f-name">Full name</label>
-<input autocomplete="name" id="f-name" maxlength="120" name="name" placeholder="Maria Gonzalez" required="" type="text"/>
-</div>
-<div class="field-row">
-<div class="field">
-<label for="f-phone">Phone</label>
-<input autocomplete="tel" id="f-phone" maxlength="40" name="phone" placeholder="(503) 000-0000" required="" type="tel"/>
-</div>
-<div class="field">
-<label for="f-email">Email</label>
-<input autocomplete="email" id="f-email" maxlength="254" name="email" placeholder="you@email.com" required="" type="email"/>
-</div>
-</div>
+<form action="/book/" class="form" method="get" autocomplete="off">
 <div class="field">
 <label for="f-case">What do you need help with?</label>
-<select id="f-case" name="case_type">
+<select id="f-case" required="">
+<option value="" disabled="" selected="">Select an option</option>
 <option>I am not sure — I need advice</option>
 <option>Green card / family petition</option>
 <option>Adjustment of status</option>
@@ -118,11 +105,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 <div class="field">
 <label for="f-msg">Briefly, what is going on?</label>
-<textarea id="f-msg" maxlength="3000" name="message" placeholder="Any deadlines, hearing dates, prior filings or denials we should know about." rows="3"></textarea>
+<textarea id="f-msg" maxlength="3000" required="" placeholder="Any deadlines, hearing dates, prior filings or denials we should know about." rows="3"></textarea>
 </div>
-<button class="btn btn--primary btn--block" type="submit">Request a consultation</button>
-</form><p class="form-status" id="form-status" role="status" tabindex="-1"></p>
-<p class="form-card__note">We call back within one business day. Office hours Monday to Friday, 9:00am–5:00pm Pacific. Please don’t send confidential details until we have opened a case together.</p>
+<button class="btn btn--primary btn--block" type="submit">Continue to free appointment</button>
+</form>
+<p class="form-card__note">You’ll choose your appointment in the next step. Please don’t send confidential details until we have opened a case together.</p>
 <div class="form-card__callback">
 <svg aria-hidden="true" class="icon" style="color: var(--navy);"><use href="#i-phone"></use></svg>
 <span>Rather talk now? Call <a data-call="" href="tel:+15032068414">(503) 206-8414</a></span>
@@ -165,8 +152,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div class="service"><h3>Advance Parole</h3><p>Travel authorization so you can leave and return while your case is still pending.</p></div>
 <div class="service service--cta">
 <h3>Not sure what applies?</h3>
-<p>Most people aren’t. That is what the consultation is for.</p>
-<a href="#consult">Book a consultation</a>
+<p>Most people aren’t. Our intake team can listen to your situation and explain the next steps.</p>
+<a href="#consult">Book a free appointment</a>
 </div>
 </div>
 </div>
@@ -266,8 +253,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 <div class="faq__list">
 <details class="faq__item" open="">
-<summary><span>How much is the consultation?</span><span class="faq__plus"><svg aria-hidden="true"><use href="#i-plus"></use></svg></span></summary>
-<p>$150. If you retain us within 30 days, that $150 applies toward your case opening fee.</p>
+<summary><span>Is the intake appointment free?</span><span class="faq__plus"><svg aria-hidden="true"><use href="#i-plus"></use></svg></span></summary>
+<p>Yes. You can book a free appointment with our intake team to discuss your situation and learn about the next steps.</p>
 </details>
 <details class="faq__item">
 <summary><span>How much will my case cost?</span><span class="faq__plus"><svg aria-hidden="true"><use href="#i-plus"></use></svg></span></summary>
@@ -299,7 +286,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </details>
 <details class="faq__item">
 <summary><span>When are you open?</span><span class="faq__plus"><svg aria-hidden="true"><use href="#i-plus"></use></svg></span></summary>
-<p>Monday through Friday, 9:00am to 5:00pm Pacific. Closed weekends and most federal holidays. The form above reaches us any hour.</p>
+<p>Monday through Friday, 9:00am to 5:00pm Pacific. Closed weekends and most federal holidays. You can start booking your appointment online any hour.</p>
 </details>
 </div>
 </div>
@@ -310,10 +297,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div class="final-cta__copy">
 <h2 class="section-title section-title--on-dark" id="cta-title">Come out of the shadows</h2>
 <hr class="rule"/>
-<p class="final-cta__lead">Tell us what is going on and we will tell you what is possible. One $150 consultation, credited toward your case if you hire us within 30 days. Beaverton and Salem, Monday to Friday.</p>
+<p class="final-cta__lead">Take the first step: book a free appointment with our intake team to discuss your situation. Beaverton and Salem, Monday to Friday.</p>
 </div>
 <div class="final-cta__actions">
-<a class="btn btn--primary" href="#consult">Schedule a consultation</a>
+<a class="btn btn--primary" href="#consult">Book a free appointment with our intake team</a>
 <a class="btn btn--ghost-dark" data-call="" href="tel:+15032068414">
 <svg aria-hidden="true" class="icon"><use href="#i-phone"></use></svg>(503) 206-8414
       </a>
