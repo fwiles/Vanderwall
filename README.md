@@ -45,6 +45,8 @@ The legacy `/api/consultation` endpoint is no longer used by the main landing pa
 
 ## Tracking
 
+The supplied CallRail script for company `256727770` is installed immediately before `</body>` on all nine public HTML pages, including the 404 page, following CallRail’s manual installation instructions. It is included in local, preview, and production builds. Tracking-number configuration and live number-swapping verification are managed in CallRail.
+
 The supplied Google Tag Manager container `GTM-KJ9SMN3` is installed in the head of both landing pages and loads in all environments. Existing `dataLayer` events are available for GTM triggers. Configure tags and publish changes in Google Tag Manager.
 
 Optional direct Google tag environment variables are documented in `.env.example`. Leave these unset when the same tags are managed through GTM to avoid duplicate tracking:
