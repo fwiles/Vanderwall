@@ -36,6 +36,19 @@ for (const path of ['book/', 'es/book/']) {
   await writeFile(new URL(`${path}index.html`, output), html);
 }
 await writeFile(new URL('robots.txt', output), 'User-agent: *\nAllow: /\n');
+for (const language of ['en', 'es']) {
+  const prefix = language === 'es' ? 'es/' : '';
+  const path = `${prefix}thank-you/`;
+  const landing = await readFile(new URL(`../${prefix}index.html`, import.meta.url), 'utf8');
+  const reviews = landing.match(/<section aria-labelledby="reviews-title"[\s\S]*?<\/section>/)?.[0];
+  const footer = landing.match(/<footer class="site-footer"[\s\S]*?<\/footer>/)?.[0];
+  if (!reviews || !footer) throw new Error(`Missing shared reviews or footer for ${language}`);
+  let html = await readFile(new URL(`../${path}index.html`, import.meta.url), 'utf8');
+  html = html.replace('<!-- SHARED_REVIEWS -->', () => reviews).replace('<!-- SHARED_FOOTER -->', () => footer);
+  html = html.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/thank-you/">\n<link rel="alternate" hreflang="es" href="${origin}/es/thank-you/">` : '');
+  await mkdir(new URL(path, output), { recursive: true });
+  await writeFile(new URL(`${path}index.html`, output), html);
+}
 await cp(new URL('../instant/', import.meta.url), new URL('instant/', output), { recursive: true });
 await cp(new URL('../lib/instant-schema.js', import.meta.url), new URL('instant/schema.js', output));
 for (const language of ['en', 'es']) {
@@ -48,4 +61,4 @@ for (const language of ['en', 'es']) {
   await writeFile(new URL(`${path}index.html`, output), instantHtml);
 
 }
-console.log(`Built English and Spanish landing, booking and instant-form pages. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);
+console.log(`Built English and Spanish landing, booking, thank-you and instant-form pages. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);

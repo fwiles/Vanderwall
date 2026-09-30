@@ -455,6 +455,16 @@ ul { margin: 0; padding: 0; list-style: none; }
   .form { gap: 12px; }
 }
 
+/* Booking confirmation, followed by the shared client reviews. */
+.thank-you { background: var(--mint); padding-block: clamp(40px, 6vw, 80px); text-align: center; }
+.thank-you__inner { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 800px; }
+.thank-you__check { display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 4px; border-radius: 50%; background: var(--navy); color: var(--teal); }
+.thank-you__check svg { width: 32px; height: 32px; }
+.thank-you h1 { color: var(--navy); font-size: clamp(2.3rem, 6vw, 4rem); line-height: 1.15; }
+.thank-you__lead { font-size: clamp(1.125rem, 2.5vw, 1.375rem); }
+.thank-you__contact { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 12px; }
+.thank-you__contact .btn { min-height: 56px; }
+
 /* Dedicated booking pages give the Lawmatics form the full content width. */
 .booking { min-height: calc(100vh - 90px); padding-block: 32px 48px; background: var(--mint); }
 .booking__back { display: inline-flex; align-items: center; min-height: 44px; color: var(--navy); }

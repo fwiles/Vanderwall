@@ -12,6 +12,8 @@ English at `/`, Spanish at `/es/`. Preserves the supplied navy/teal design and r
 
 ## Two-question booking flow
 
+Booking confirmation pages are available at `/thank-you/` (English) and `/es/thank-you/` (Spanish). They include the call button and pull the matching landing page's existing reviews and footer at build time. After deployment, configure each Lawmatics calendar's successful-booking redirect to the matching absolute URL on the live site. The redirect is managed in Lawmatics and is not configured by this repository. Visits to these pages do not automatically emit a lead conversion.
+
 The main landing pages ask only what the visitor needs help with and a brief description. Both questions are required to continue. These introductory answers are deliberately not saved, transmitted, included in URLs, or passed to Lawmatics. The controls have no `name` attributes, so native GET navigation also excludes their values when JavaScript is unavailable. The booking embed itself requires JavaScript and includes a phone fallback.
 
 Booking pages use the full content width and the requested free intake appointment heading, translated on the Spanish page. Continuing to booking does not emit a lead conversion; completion tracking must be configured with Lawmatics. The `/instant/` variants retain their separate existing intake flow.
