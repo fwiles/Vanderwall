@@ -62,3 +62,10 @@ for (const language of ['en', 'es']) {
 
 }
 console.log(`Built English and Spanish landing, booking, thank-you and instant-form pages. GTM: installed. Direct Google tags: ${production ? 'production configuration' : 'disabled for local/preview'}.`);
+
+await cp(new URL('../vsl/', import.meta.url), new URL('vsl/', output), { recursive: true });
+await cp(new URL('../lib/vsl-schema.js', import.meta.url), new URL('vsl/schema.js', output));
+let vslHtml = await readFile(new URL('../vsl/index.html', import.meta.url), 'utf8');
+vslHtml = vslHtml.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/vsl/">` : '');
+await writeFile(new URL('vsl/index.html', output), vslHtml);
+console.log('Built /vsl/ with local-only qualification preview.');

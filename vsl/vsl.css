@@ -1,0 +1,77 @@
+[hidden] { display: none !important; }
+.vsl-hero { background: var(--navy); color: white; padding: 52px 24px 48px; text-align: center; }
+.vsl-inner { max-width: 930px; margin: auto; }
+.vsl-eyebrow { color: var(--teal-deep); font-size: 12px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.vsl-hero .vsl-eyebrow { color: var(--teal); }
+.vsl-hero h1 { font-size: clamp(34px, 4.5vw, 54px); line-height: 1.15; margin: 17px auto 22px; max-width: 880px; text-wrap: balance; }
+.vsl-hero h1 span { color: var(--teal); }
+.vsl-subhead { font-size: 18px; line-height: 1.65; color: var(--on-dark); max-width: 790px; margin: auto; text-wrap: pretty; }
+.vsl-video-intro { max-width: 650px; margin: 28px auto 18px; font-size: 15px; color: white; }
+.vsl-player { width: min(100%, 350px); margin: 24px auto 0; background: var(--navy-deep); box-shadow: 0 0 0 1px #ffffff33, 0 16px 45px #001b2b55; border-radius: 4px; overflow: hidden; }
+.vsl-player video { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: contain; }
+.vsl-video-credit { color: var(--on-dark); font-size: 12px; margin: 14px 0 24px; }
+.vsl-video-credit span { padding: 0 6px; }
+.vsl-start { min-height: 54px; gap: 18px; white-space: normal; }
+.vsl-support { font-size: 14px; color: var(--on-dark); max-width: 550px; margin: 15px auto 0; }
+.vsl-band { background: #f1f6f4; padding: 48px 20px; scroll-margin-top: 24px; }
+.vsl-card { background: white; max-width: 730px; margin: auto; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 8px 30px #10496b08; padding: 32px; }
+.vsl-card-heading h2 { color: var(--navy); font-size: 30px; margin: 8px 0 12px; }
+.vsl-card-heading > p:last-child { font-size: 14px; }
+.vsl-progress { margin: 24px 0; }
+#step-label { font-size: 12px; color: var(--teal-deep); font-weight: 700; }
+progress { display: block; width: 100%; height: 5px; border: none; margin-top: 8px; background: var(--mint); border-radius: 4px; }
+progress::-webkit-progress-bar { background: var(--mint); }
+progress::-webkit-progress-value { background: var(--teal-deep); }
+progress::-moz-progress-bar { background: var(--teal-deep); }
+.vsl-card fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.vsl-card legend { font-family: var(--sans); font-size: 21px; line-height: 1.45; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding: 0; width: 100%; }
+.vsl-option { display: flex; align-items: center; gap: 13px; padding: 15px 17px; margin-bottom: 10px; border: 1px solid var(--field-border); border-radius: 4px; cursor: pointer; font-size: 15px; line-height: 1.5; background: var(--field-bg); }
+.vsl-option:hover, .vsl-option:has(input:checked) { border-color: var(--teal-deep); background: var(--mint); }
+.vsl-option:focus-within { outline: 2px solid var(--teal-deep); outline-offset: 2px; }
+.vsl-option input { accent-color: var(--teal-deep); width: 18px; height: 18px; flex-shrink: 0; margin: 0; }
+.vsl-actions { display: flex; justify-content: space-between; gap: 16px; margin-top: 24px; align-items: center; }
+.vsl-actions .btn { margin-left: auto; white-space: normal; }
+.vsl-back { border: 0; background: none; color: var(--navy); font: inherit; cursor: pointer; padding: 10px 0; }
+.vsl-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.vsl-fields label { font-size: 13px; font-weight: 700; color: var(--ink); }
+.vsl-fields input, .vsl-fields select { display: block; margin-top: 6px; width: 100%; min-width: 0; height: 48px; border: 1px solid var(--field-border); border-radius: 4px; background: var(--field-bg); padding: 10px; color: var(--ink); font: inherit; font-size: 16px; }
+.vsl-contact-intro { font-size: 14px; margin-bottom: 20px; }
+.vsl-contact-note { font-size: 12px; color: var(--muted); margin-top: 20px; }
+.vsl-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+#form-error { color: #982e2e; background: #fff2f2; padding: 12px; margin-top: 16px; font-size: 14px; }
+#vsl-result h2 { color: var(--navy); font-size: 28px; margin: 24px 0 12px; }
+#vsl-result .btn { margin-top: 24px; white-space: normal; }
+.vsl-attorney { max-width: 730px; margin: 32px auto 0; display: flex; align-items: center; gap: 22px; }
+.vsl-attorney img { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; }
+.vsl-attorney h2 { font-size: 23px; color: var(--navy); margin: 5px 0; }
+.vsl-attorney p:last-child { font-size: 13px; }
+.vsl-notice { margin-top: 20px; }
+.vsl-card :focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 3px; }
+@media (max-width: 600px) {
+  .site-header__inner { min-height: 60px; padding-block: 6px; }
+  .site-header__logo img { width: 130px; }
+  .site-header__call { min-height: 44px; padding-inline: 12px; }
+  .site-header__right { gap: 10px; }
+  .vsl-hero { padding: 8px 16px 18px; }
+  .vsl-subhead { font-size: 14px; line-height: 1.4; }
+  .vsl-hero h1 { font-size: 28px; line-height: 1.1; margin: 0 auto 10px; }
+  .vsl-player { max-width: 310px; margin-top: 12px; }
+  .vsl-video-credit { margin: 8px 0 0; font-size: 11px; }
+  .vsl-video-intro { font-size: 14px; margin-top: 24px; }
+  .vsl-start { font-size: 15px; padding: 14px 16px; }
+  .vsl-band { padding: 28px 14px; }
+  .vsl-card { padding: 24px 18px; }
+  .vsl-card legend { font-size: 19px; }
+  .vsl-fields { grid-template-columns: 1fr; gap: 15px; }
+  .vsl-attorney { gap: 14px; }
+  .vsl-attorney .vsl-eyebrow { font-size: 10px; }
+}
+.vsl-preview-note { background: var(--mint); border-left: 3px solid var(--teal-deep); padding: 12px 14px; font-size: 13px; margin-bottom: 22px; }
+
+/* Once an answer is selected, the questionnaire becomes the page's main view. */
+.vsl-flow .vsl-band { min-height: calc(100svh - 90px); padding-top: 36px; }
+.vsl-flow .vsl-progress { margin-top: 0; }
+.vsl-flow #vsl-result h2 { margin-top: 0; }
+@media (max-width: 600px) {
+  .vsl-flow .vsl-band { min-height: calc(100svh - 60px); padding-top: 20px; }
+}
