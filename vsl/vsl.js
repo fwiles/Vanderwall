@@ -12,10 +12,29 @@ const answers = {};
 let step = 0;
 let started = false;
 
+// Watch for the player even if the questionnaire starts before it finishes loading.
+const embeds = (window._vidalytics ??= {}).embeds ??= {};
+const embed = embeds.vidalytics_embed_wZI6hQDL8cobVxgW ??= {};
+let videoPlayer = embed.player;
+function connectVideoPlayer(player) {
+  if (!player) return;
+  player.on('play', () => { if (started) player.pause(); });
+  if (started) player.pause();
+}
+if (videoPlayer) {
+  connectVideoPlayer(videoPlayer);
+} else {
+  Object.defineProperty(embed, 'player', {
+    configurable: true,
+    get: () => videoPlayer,
+    set(player) { videoPlayer = player; connectVideoPlayer(player); }
+  });
+}
+
 function startFlow() {
   if (started) return;
   started = true;
-  document.querySelector('.vsl-player video').pause();
+  videoPlayer?.pause();
   document.querySelector('.vsl-hero').hidden = true;
   document.querySelector('.vsl-card-heading').hidden = true;
   document.body.classList.add('vsl-flow');

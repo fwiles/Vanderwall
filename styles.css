@@ -237,6 +237,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--navy);
 }
 .service p { font-size: 14px; line-height: 1.6; }
+.service--link { color: var(--body); text-decoration: none; }
+.service--link:hover { box-shadow: inset 0 0 0 2px var(--teal-deep); }
+.service--link:focus-visible { outline-color: var(--navy); }
+.service__learn-more { align-self: flex-start; margin-top: auto; }
+.service--link p { margin-bottom: 9px; }
+.service--link:hover .service__learn-more,
+.service--link:focus-visible .service__learn-more { background: var(--white); }
 .service--cta { background: var(--navy); justify-content: center; }
 .service--cta h3 { color: var(--white); }
 .service--cta p { color: var(--on-dark); }

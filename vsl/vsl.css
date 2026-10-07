@@ -7,8 +7,7 @@
 .vsl-hero h1 span { color: var(--teal); }
 .vsl-subhead { font-size: 18px; line-height: 1.65; color: var(--on-dark); max-width: 790px; margin: auto; text-wrap: pretty; }
 .vsl-video-intro { max-width: 650px; margin: 28px auto 18px; font-size: 15px; color: white; }
-.vsl-player { width: min(100%, 350px); margin: 24px auto 0; background: var(--navy-deep); box-shadow: 0 0 0 1px #ffffff33, 0 16px 45px #001b2b55; border-radius: 4px; overflow: hidden; }
-.vsl-player video { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: contain; }
+.vsl-player { width: 100%; margin: 24px auto 0; background: var(--navy-deep); box-shadow: 0 0 0 1px #ffffff33, 0 16px 45px #001b2b55; border-radius: 4px; overflow: hidden; }
 .vsl-video-credit { color: var(--on-dark); font-size: 12px; margin: 14px 0 24px; }
 .vsl-video-credit span { padding: 0 6px; }
 .vsl-start { min-height: 54px; gap: 18px; white-space: normal; }
@@ -55,7 +54,7 @@ progress::-moz-progress-bar { background: var(--teal-deep); }
   .vsl-hero { padding: 8px 16px 18px; }
   .vsl-subhead { font-size: 14px; line-height: 1.4; }
   .vsl-hero h1 { font-size: 28px; line-height: 1.1; margin: 0 auto 10px; }
-  .vsl-player { max-width: 310px; margin-top: 12px; }
+  .vsl-player { margin-top: 12px; }
   .vsl-video-credit { margin: 8px 0 0; font-size: 11px; }
   .vsl-video-intro { font-size: 14px; margin-top: 24px; }
   .vsl-start { font-size: 15px; padding: 14px 16px; }

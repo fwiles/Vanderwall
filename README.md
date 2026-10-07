@@ -100,7 +100,7 @@ See `copy/instant-form-source.md` and `copy/instant-form-es-source.md` for exact
 
 ## Spouse green card VSL preview
 
-`/vsl/` follows PLG’s centered video hero and step-by-step questionnaire structure, using Vanderwall branding and the client’s supplied copy. The captioned portrait video is served as H.264/AAC with fast-start metadata, a poster frame, native controls, and no automatic video download. Source: `AOS_VSL_captioned_review.mp4`; the optimized copy is in `assets/video/`.
+`/vsl/` follows PLG’s centered video hero and step-by-step questionnaire structure, using Vanderwall branding and the client’s supplied copy. The video uses the responsive Vidalytics embed `wZI6hQDL8cobVxgW`. Playback pauses when the visitor starts the questionnaire, including when the player finishes loading after the first answer.
 
 The six questions and service-fit rules live in `lib/vsl-schema.js`. Disqualifying answers immediately end the questionnaire. All other answers, including “Not sure,” “Another way,” and willingness to pay without readiness to book, continue to the six contact fields. Back navigation preserves answers while the page remains open.
 
