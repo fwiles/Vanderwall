@@ -107,3 +107,18 @@ The six questions and service-fit rules live in `lib/vsl-schema.js`. Disqualifyi
 **Intentionally local-only at the client’s request:** this preview does not transmit or store answers/contact details, create a CRM lead, book an appointment, or emit a lead conversion. The contact step and completion screen identify this limitation. Existing GTM/CallRail page scripts are retained, but questionnaire data is not added to analytics. Before accepting live leads, supply a VSL-specific intake destination, enforce the same validation/screening on the server, and connect confirmed delivery to the appropriate scheduling flow. Do not reuse the old Lawmatics field IDs for these different questions.
 
 Preview: `npm run dev`, then open `http://localhost:3000/vsl/`. The development server supports byte-range requests for video playback and seeking.
+
+## K-1 and adjustment-of-status search landings
+
+Four additional paid-search routes use the existing bilingual design and calendars:
+
+| Service | English | Spanish |
+| --- | --- | --- |
+| K-1 / fiancé / partner visa options | `/fiance-visas/` | `/es/fiance-visas/` |
+| I-485 / adjustment of status | `/adjustment-of-status/` | `/es/adjustment-of-status/` |
+
+Edit service copy in `services/content.mjs`. `scripts/service-pages.mjs` renders these pages from the existing language templates during the normal build, retaining the header, founder, reviews, footer, GTM, CallRail and responsive CSS. Language switches preserve the service; canonical/hreflang URLs use `SITE_URL`. Existing general, instant and VSL pages are unchanged.
+
+Each service form has two required selections: relationship or case stage, then applicant location. All choices continue to the same `/book/` or `/es/book/` calendar, with no screening or eligibility determination. Answers are not saved, transmitted, or added to URLs/analytics. The form explains this and distinguishes the free intake appointment from an attorney consultation. Existing Lawmatics embed IDs and confirmation setup are unchanged.
+
+Research, official sources and copy rationale are in `copy/service-landing-research.html` (internal only). FAQs include relevant official-source links. These pages retain the site's paid-traffic `noindex` policy. Build checks cover all four routes, localized calendar destinations, metadata, anchors, assets and tracking snippets.

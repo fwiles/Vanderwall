@@ -1,6 +1,7 @@
 import { mkdir, cp, readFile, writeFile, rm } from 'node:fs/promises';
 import { instantFields } from './instant-fields.mjs';
 import { disqualificationMessages } from '../lib/instant-schema.js';
+import { buildServicePages } from './service-pages.mjs';
 
 const output = new URL('../dist/', import.meta.url);
 await rm(output, { recursive: true, force: true });
@@ -21,6 +22,7 @@ const config = { intakeEnabled: Boolean(process.env.INTAKE_WEBHOOK_URL), ga4: pr
 if (config.ga4 && !/^G-[A-Z0-9]+$/.test(config.ga4)) throw new Error('Invalid GA4_ID');
 if (config.ads && !/^AW-\d+$/.test(config.ads)) throw new Error('Invalid GOOGLE_ADS_ID');
 await writeFile(new URL('config.js', output), `window.LP_CONFIG = ${JSON.stringify(config).replaceAll('<', '\\u003c')};\n`);
+await buildServicePages(output, origin);
 for (const language of ['en', 'es']) {
   const path = language === 'en' ? '' : 'es/';
   let html = await readFile(new URL(`../${path}index.html`, import.meta.url), 'utf8');

@@ -27,6 +27,21 @@ test('deployment emits clean bilingual static output and safe configuration', ()
       assert.match(booking, /https:\/\/navi.lawmatics.com\/intake.min.js/);
     }
     assert.match(readFileSync('dist/es/index.html','utf8'),/lang="es"/);
+    for (const slug of ['fiance-visas', 'adjustment-of-status']) {
+      for (const lang of ['en', 'es']) {
+        const prefix = lang === 'es' ? 'es/' : '';
+        const page = readFileSync(`dist/${prefix}${slug}/index.html`, 'utf8');
+        assert.ok(page.includes(`<html lang="${lang}">`));
+        assert.ok(page.includes(`class="site-header__lang" href="/${lang === 'es' ? '' : 'es/'}${slug}/"`));
+        const form = page.match(/<form[\s\S]*?<\/form>/)[0];
+        assert.ok(form.includes(`action="/${prefix}book/"`));
+        assert.equal((form.match(/<select[^>]* required>/g) || []).length, 2);
+        assert.doesNotMatch(form, /\bname=|\/api\//, 'service answers must not be transmitted');
+        assert.match(page, /GTM-KJ9SMN3/);
+        assert.match(page, /cdn.callrail.com\/companies\/256727770/);
+        assert.doesNotMatch(page, /DEPLOY_METADATA/);
+      }
+    }
     const instant = readFileSync('dist/instant/index.html', 'utf8');
     assert.equal((instant.match(/class="instant-step"/g) || []).length, 6);
     assert.equal((instant.match(/type="radio"/g) || []).length, 25);
@@ -52,6 +67,14 @@ test('deployment emits clean bilingual static output and safe configuration', ()
     assert.ok(!existsSync('dist/reference')); assert.ok(!existsSync('dist/copy'));
     build({SITE_URL:'https://landing.example.com',INTAKE_WEBHOOK_URL:'https://secret.example.com/hook',GA4_ID:'G-TEST123',VERCEL_ENV:'production'});
     const html=readFileSync('dist/es/index.html','utf8');
+    for (const slug of ['fiance-visas', 'adjustment-of-status']) {
+      for (const prefix of ['', 'es/']) {
+        const page = readFileSync(`dist/${prefix}${slug}/index.html`, 'utf8');
+        assert.ok(page.includes(`rel="canonical" href="https://landing.example.com/${prefix}${slug}/"`));
+        assert.ok(page.includes(`hreflang="en" href="https://landing.example.com/${slug}/"`));
+        assert.ok(page.includes(`hreflang="es" href="https://landing.example.com/es/${slug}/"`));
+      }
+    }
     assert.match(html,/href="https:\/\/landing.example.com\/es\/"/);
     assert.match(readFileSync('dist/instant/index.html','utf8'), /rel="canonical" href="https:\/\/landing.example.com\/instant\/"/);
     assert.match(readFileSync('dist/es/instant/index.html','utf8'), /rel="canonical" href="https:\/\/landing.example.com\/es\/instant\/"/);
@@ -60,7 +83,7 @@ test('deployment emits clean bilingual static output and safe configuration', ()
     assert.ok(!html.includes('type="submit" disabled'));
     const config=readFileSync('dist/config.js','utf8');
     assert.ok(config.includes('G-TEST123')); assert.ok(!config.includes('secret.example'));
-    for(const path of ['dist/index.html','dist/es/index.html','dist/instant/index.html','dist/es/instant/index.html','dist/book/index.html','dist/es/book/index.html']) {
+    for(const path of ['dist/index.html','dist/es/index.html','dist/instant/index.html','dist/es/instant/index.html','dist/book/index.html','dist/es/book/index.html', ...['fiance-visas', 'adjustment-of-status'].flatMap(slug => [`dist/${slug}/index.html`, `dist/es/${slug}/index.html`])]) {
       const page=readFileSync(path,'utf8');
       const ids=[...page.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
       assert.equal(new Set(ids).size,ids.length);
