@@ -78,23 +78,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><p class="vsl-notice">Please enable JavaScript to complete these questions, or call <a href="tel:+15032068414">(503) 206-8414</a> for help.</p></noscript>
 <div id="vsl-quiz" hidden>
 <div class="vsl-progress"><span id="step-label"></span><progress id="step-progress" max="7" value="1" aria-label="Questionnaire progress"></progress></div>
-<form id="vsl-form">
 <div id="question-panel"></div>
-<fieldset id="contact-panel" hidden><legend tabindex="-1">How can our team reach you?</legend><p class="vsl-contact-intro">Please share your contact information so our intake team can help with your next step.</p><p class="vsl-preview-note">Preview only: this form is not connected yet. Your answers and contact information will not be sent.</p>
-<div class="vsl-fields">
-<label>Full name<input name="name" autocomplete="name" maxlength="120" minlength="2" required></label>
-<label>Email address<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
-<label>Phone number<input name="phone" type="tel" autocomplete="tel" maxlength="40" required></label>
-<label>State of residence<select name="state" autocomplete="address-level1" required><option value="">Select your state</option></select></label>
-<label>Preferred language<input name="preferred_language" autocomplete="language" list="languages" maxlength="80" required placeholder="Select or enter a language"><datalist id="languages"><option value="English"><option value="Spanish"><option value="Portuguese"><option value="German"><option value="Mandarin"><option value="French"></datalist></label>
-<label>Preferred contact method<select name="contact_method" required><option value="">Select a contact method</option><option>Phone call</option><option>Text message</option><option>Email</option></select></label>
-</div>
-<div class="vsl-honeypot" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
-<p class="vsl-contact-note">By submitting, you are asking Vanderwall Immigration to contact you about your inquiry using your preferred contact method. No payment is collected on this form. Submitting does not create an attorney–client relationship.</p>
-</fieldset>
-<p id="form-error" role="alert" hidden></p>
-<div class="vsl-actions"><button type="button" id="back-button" class="vsl-back">← Back</button><button type="button" id="continue-button" class="btn btn--primary">Continue <span aria-hidden="true">→</span></button><button type="submit" id="submit-button" class="btn btn--primary" hidden>Finish preview →</button></div>
-</form>
+<section id="calendar-panel" aria-labelledby="calendar-title" hidden>
+<h2 id="calendar-title" tabindex="-1">Schedule your appointment</h2>
+<p class="vsl-calendar-intro">Choose an available time below to speak with our team.</p>
+<div id="calendar-embed"></div>
+<template id="calendar-template">
+<!-- Start Lawmatics Embedded Snippet -->
+<script id="lm-embedded-script">
+!function(e,t,n,a,s,c,i){if(!e[s]){i=e[s]=function(){i.process?i.process.apply(i,arguments):i.queue.push(arguments)},i.queue=[],i.t=1*new Date;var o=t.createElement(n);o.async=1,o.src=a+"?t="+Math.ceil(new Date/c)*c;var r=t.getElementsByTagName(n)[0];r.parentNode.insertBefore(o,r)}}(window,document,"script","https://navi.lawmatics.com/intake.min.js","lm_intake",864e5),lm_intake("76942df5-f58d-421c-b1f2-2095353f4a6d", "lm-embedded-script", {});
+</script>
+<!-- End Lawmatics Embedded Snippet -->
+</template>
+<p class="vsl-calendar-note">Having trouble scheduling? Call <a data-call href="tel:+15032068414">(503) 206-8414</a> for help.</p>
+</section>
+<div class="vsl-actions"><button type="button" id="back-button" class="vsl-back">← Back</button></div>
 </div>
 <div id="vsl-result" hidden><h2 tabindex="-1" id="result-title"></h2><p id="result-message"></p></div>
 </div>

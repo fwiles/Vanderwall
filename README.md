@@ -102,9 +102,11 @@ See `copy/instant-form-source.md` and `copy/instant-form-es-source.md` for exact
 
 `/vsl/` follows PLG’s centered video hero and step-by-step questionnaire structure, using Vanderwall branding and the client’s supplied copy. The video uses the responsive Vidalytics embed `wZI6hQDL8cobVxgW`. Playback pauses when the visitor starts the questionnaire, including when the player finishes loading after the first answer.
 
-The six questions and service-fit rules live in `lib/vsl-schema.js`. Disqualifying answers immediately end the questionnaire. All other answers, including “Not sure,” “Another way,” and willingness to pay without readiness to book, continue to the six contact fields. Back navigation preserves answers while the page remains open.
+The six questions and service-fit rules live in `lib/vsl-schema.js`. Disqualifying answers immediately end the questionnaire. All other answers, including “Not sure,” “Another way,” and willingness to pay without readiness to book, continue to the Lawmatics calendar. Back navigation preserves answers while the page remains open.
 
-**Intentionally local-only at the client’s request:** this preview does not transmit or store answers/contact details, create a CRM lead, book an appointment, or emit a lead conversion. The contact step and completion screen identify this limitation. Existing GTM/CallRail page scripts are retained, but questionnaire data is not added to analytics. Before accepting live leads, supply a VSL-specific intake destination, enforce the same validation/screening on the server, and connect confirmed delivery to the appropriate scheduling flow. Do not reuse the old Lawmatics field IDs for these different questions.
+The final step loads the supplied Lawmatics calendar `76942df5-f58d-421c-b1f2-2095353f4a6d` once the visitor completes the qualifying questions. Returning to earlier questions preserves the calendar. Questionnaire answers remain in memory only and are not passed to Lawmatics or analytics; contact information and booking are handled within the embed.
+
+The VSL confirmation page is `/vsl/thank-you/`, with shared reviews, footer, and phone support. After deployment, set this calendar’s successful-booking redirect in Lawmatics to the absolute live-site URL ending in `/vsl/thank-you/`. This redirect is managed in Lawmatics, not in this repository. Page visits do not automatically emit a lead conversion.
 
 Preview: `npm run dev`, then open `http://localhost:3000/vsl/`. The development server supports byte-range requests for video playback and seeking.
 

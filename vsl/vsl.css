@@ -31,13 +31,6 @@ progress::-moz-progress-bar { background: var(--teal-deep); }
 .vsl-actions { display: flex; justify-content: space-between; gap: 16px; margin-top: 24px; align-items: center; }
 .vsl-actions .btn { margin-left: auto; white-space: normal; }
 .vsl-back { border: 0; background: none; color: var(--navy); font: inherit; cursor: pointer; padding: 10px 0; }
-.vsl-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.vsl-fields label { font-size: 13px; font-weight: 700; color: var(--ink); }
-.vsl-fields input, .vsl-fields select { display: block; margin-top: 6px; width: 100%; min-width: 0; height: 48px; border: 1px solid var(--field-border); border-radius: 4px; background: var(--field-bg); padding: 10px; color: var(--ink); font: inherit; font-size: 16px; }
-.vsl-contact-intro { font-size: 14px; margin-bottom: 20px; }
-.vsl-contact-note { font-size: 12px; color: var(--muted); margin-top: 20px; }
-.vsl-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
-#form-error { color: #982e2e; background: #fff2f2; padding: 12px; margin-top: 16px; font-size: 14px; }
 #vsl-result h2 { color: var(--navy); font-size: 28px; margin: 24px 0 12px; }
 #vsl-result .btn { margin-top: 24px; white-space: normal; }
 .vsl-attorney { max-width: 730px; margin: 32px auto 0; display: flex; align-items: center; gap: 22px; }
@@ -61,11 +54,9 @@ progress::-moz-progress-bar { background: var(--teal-deep); }
   .vsl-band { padding: 28px 14px; }
   .vsl-card { padding: 24px 18px; }
   .vsl-card legend { font-size: 19px; }
-  .vsl-fields { grid-template-columns: 1fr; gap: 15px; }
   .vsl-attorney { gap: 14px; }
   .vsl-attorney .vsl-eyebrow { font-size: 10px; }
 }
-.vsl-preview-note { background: var(--mint); border-left: 3px solid var(--teal-deep); padding: 12px 14px; font-size: 13px; margin-bottom: 22px; }
 
 /* Once an answer is selected, the questionnaire becomes the page's main view. */
 .vsl-flow .vsl-band { min-height: calc(100svh - 90px); padding-top: 36px; }
@@ -74,3 +65,9 @@ progress::-moz-progress-bar { background: var(--teal-deep); }
 @media (max-width: 600px) {
   .vsl-flow .vsl-band { min-height: calc(100svh - 60px); padding-top: 20px; }
 }
+.vsl-card--calendar { max-width: 1100px; }
+#calendar-title { color: var(--navy); font-size: 28px; margin: 0 0 12px; }
+.vsl-calendar-intro { font-size: 15px; margin-bottom: 20px; }
+#calendar-embed { min-height: 600px; }
+#calendar-embed iframe { width: 100%; border: 0; }
+.vsl-calendar-note { font-size: 13px; color: var(--muted); margin-top: 20px; }
