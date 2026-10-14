@@ -11,6 +11,8 @@
 .vsl-video-credit { color: var(--on-dark); font-size: 12px; margin: 14px 0 24px; }
 .vsl-video-credit span { padding: 0 6px; }
 .vsl-start { min-height: 54px; gap: 18px; white-space: normal; }
+.vsl-reviews { background: #f1f6f4; padding: 48px 20px; }
+.vsl-reviews img { display: block; width: 100%; max-width: 930px; height: auto; margin: auto; border-radius: 8px; }
 .vsl-support { font-size: 14px; color: var(--on-dark); max-width: 550px; margin: 15px auto 0; }
 .vsl-band { background: #f1f6f4; padding: 48px 20px; scroll-margin-top: 24px; }
 .vsl-card { background: white; max-width: 730px; margin: auto; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 8px 30px #10496b08; padding: 32px; }
@@ -50,7 +52,8 @@ progress::-moz-progress-bar { background: var(--teal-deep); }
   .vsl-player { margin-top: 12px; }
   .vsl-video-credit { margin: 8px 0 0; font-size: 11px; }
   .vsl-video-intro { font-size: 14px; margin-top: 24px; }
-  .vsl-start { font-size: 15px; padding: 14px 16px; }
+  .vsl-start { font-size: 15px; padding: 14px 16px; margin-top: 18px; }
+  .vsl-reviews { padding: 28px 14px; }
   .vsl-band { padding: 28px 14px; }
   .vsl-card { padding: 24px 18px; }
   .vsl-card legend { font-size: 19px; }
@@ -58,7 +61,7 @@ progress::-moz-progress-bar { background: var(--teal-deep); }
   .vsl-attorney .vsl-eyebrow { font-size: 10px; }
 }
 
-/* Once an answer is selected, the questionnaire becomes the page's main view. */
+/* Once the booking button is selected, the questionnaire becomes the main view. */
 .vsl-flow .vsl-band { min-height: calc(100svh - 90px); padding-top: 36px; }
 .vsl-flow .vsl-progress { margin-top: 0; }
 .vsl-flow #vsl-result h2 { margin-top: 0; }

@@ -100,7 +100,7 @@ See `copy/instant-form-source.md` and `copy/instant-form-es-source.md` for exact
 
 ## Spouse green card VSL preview
 
-`/vsl/` follows PLG’s centered video hero and step-by-step questionnaire structure, using Vanderwall branding and the client’s supplied copy. The video uses the responsive Vidalytics embed `wZI6hQDL8cobVxgW`. Playback pauses when the visitor starts the questionnaire, including when the player finishes loading after the first answer.
+`/vsl/` follows PLG’s centered video hero and step-by-step questionnaire structure, using Vanderwall branding and the client’s supplied copy. The video uses the responsive Vidalytics embed `wZI6hQDL8cobVxgW`. The “Book a free intake appointment” button below the video opens the first questionnaire question. The initial page shows the client review photo collage in place of the questionnaire. Playback pauses when the visitor starts the questionnaire, including when the player finishes loading after the button is clicked.
 
 The six questions and service-fit rules live in `lib/vsl-schema.js`. Disqualifying answers immediately end the questionnaire. All other answers, including “Not sure,” “Another way,” and willingness to pay without readiness to book, continue to the Lawmatics calendar. Back navigation preserves answers while the page remains open.
 

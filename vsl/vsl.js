@@ -32,7 +32,9 @@ function startFlow() {
   started = true;
   videoPlayer?.pause();
   document.querySelector('.vsl-hero').hidden = true;
-  document.querySelector('.vsl-card-heading').hidden = true;
+  document.querySelector('.vsl-reviews').hidden = true;
+  document.querySelector('#questions').hidden = false;
+  quiz.hidden = false;
   document.body.classList.add('vsl-flow');
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
@@ -111,5 +113,9 @@ function advance() {
   render();
 }
 back.addEventListener('click', () => { if (step > 0) { step--; render(); } });
-quiz.hidden = false;
-render(false);
+const startButton = document.querySelector('#start-button');
+startButton.addEventListener('click', () => {
+  startFlow();
+  render();
+});
+startButton.hidden = false;
