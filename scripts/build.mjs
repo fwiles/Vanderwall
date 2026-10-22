@@ -70,7 +70,10 @@ for (const file of ['vsl.js', 'vsl.css']) {
   await cp(new URL(`../vsl/${file}`, import.meta.url), new URL(`vsl/${file}`, output));
 }
 await cp(new URL('../lib/vsl-schema.js', import.meta.url), new URL('vsl/schema.js', output));
-let vslHtml = await readFile(new URL('../vsl/index.html', import.meta.url), 'utf8');
-vslHtml = vslHtml.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/vsl/">` : '');
-await writeFile(new URL('vsl/index.html', output), vslHtml);
-console.log('Built /vsl/ with qualification questions, Lawmatics calendar and /vsl/thank-you/.');
+for (const path of ['vsl/', 'es/vsl/']) {
+  let vslHtml = await readFile(new URL(`../${path}index.html`, import.meta.url), 'utf8');
+  vslHtml = vslHtml.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/vsl/">\n<link rel="alternate" hreflang="es" href="${origin}/es/vsl/">` : '');
+  await mkdir(new URL(path, output), { recursive: true });
+  await writeFile(new URL(`${path}index.html`, output), vslHtml);
+}
+console.log('Built /vsl/ and /es/vsl/ with qualification questions, Lawmatics calendar and /vsl/thank-you/.');

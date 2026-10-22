@@ -1,4 +1,7 @@
-import { questions, isDisqualified, disqualificationMessage } from './schema.js';
+import { questions as englishQuestions, spanishQuestions, isDisqualified, disqualificationMessage, spanishDisqualificationMessage } from './schema.js';
+
+const spanish = document.documentElement.lang === 'es';
+const questions = spanish ? spanishQuestions : englishQuestions;
 
 const quiz = document.querySelector('#vsl-quiz');
 const panel = document.querySelector('#question-panel');
@@ -10,7 +13,8 @@ let started = false;
 
 // Watch for the player even if the questionnaire starts before it finishes loading.
 const embeds = (window._vidalytics ??= {}).embeds ??= {};
-const embed = embeds.vidalytics_embed_wZI6hQDL8cobVxgW ??= {};
+const embedId = document.querySelector('.vsl-player [id^="vidalytics_embed_"]').id;
+const embed = embeds[embedId] ??= {};
 let videoPlayer = embed.player;
 function connectVideoPlayer(player) {
   if (!player) return;
@@ -65,7 +69,9 @@ function render(focus = true) {
   if (atCalendar) loadCalendar();
   panel.hidden = atCalendar;
   back.hidden = step === 0;
-  document.querySelector('#step-label').textContent = atCalendar ? 'Step 7 of 7 · Schedule your appointment' : `Question ${step + 1} of ${questions.length}`;
+  document.querySelector('#step-label').textContent = spanish
+    ? (atCalendar ? 'Paso 7 de 7 · Agende su cita' : `Pregunta ${step + 1} de ${questions.length}`)
+    : (atCalendar ? 'Step 7 of 7 · Schedule your appointment' : `Question ${step + 1} of ${questions.length}`);
   document.querySelector('#step-progress').value = step + 1;
   panel.replaceChildren();
   if (!atCalendar) {
@@ -88,7 +94,7 @@ function render(focus = true) {
         startFlow();
         // Stop immediately for any client-defined disqualifying answer.
         if (isDisqualified(answers)) {
-          finish('Thank you for sharing your situation', disqualificationMessage);
+          finish(spanish ? 'Gracias por compartir su situación' : 'Thank you for sharing your situation', spanish ? spanishDisqualificationMessage : disqualificationMessage);
           return;
         }
         advance();

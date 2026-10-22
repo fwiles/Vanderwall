@@ -100,6 +100,8 @@ See `copy/instant-form-source.md` and `copy/instant-form-es-source.md` for exact
 
 ## Spouse green card VSL preview
 
+`/es/vsl/` is the Spanish VSL variant, with translated page copy, questionnaire, progress labels and screening results. It uses Vidalytics video `a60BQc8vPeYvF_w3`; the English video remains unchanged. Both variants currently use the existing Lawmatics scheduler after qualification. Scheduler content and booking redirects are managed in Lawmatics.
+
 `/vsl/` follows PLG’s centered video hero and step-by-step questionnaire structure, using Vanderwall branding and the client’s supplied copy. The video uses the responsive Vidalytics embed `wZI6hQDL8cobVxgW`. The “Book a free intake appointment” button below the video opens the first questionnaire question. The initial page shows the client review photo collage in place of the questionnaire. Playback pauses when the visitor starts the questionnaire, including when the player finishes loading after the button is clicked.
 
 The six questions and service-fit rules live in `lib/vsl-schema.js`. Disqualifying answers immediately end the questionnaire. All other answers, including “Not sure,” “Another way,” and willingness to pay without readiness to book, continue to the Lawmatics calendar. Back navigation preserves answers while the page remains open.
