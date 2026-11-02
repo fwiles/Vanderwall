@@ -11,9 +11,9 @@ The five existing qualification questions and screening rules are preserved. Qua
 ## Items for Samuel to confirm
 
 - The user deferred the new phone number. Existing `(503) 206-8414` is unchanged, **not a new Wildfire tracking number**. The added “Prefer to talk now? Call NEW NUMBER” CTA was omitted. Existing source-page phone links remain.
-- Both supplied Google Doc tabs use `2dea1e18-5ad9-4988-aa79-493af577f8c0`. This exact ID is used on both new pages pending clarification.
-- Read-only inspection of the hosted form rendered **4.0 - ES Wildfire AOS LP Form**: English contact labels, a Spanish immigration-help question, an English appointment calendar and SUBMIT button. The English page therefore currently reaches that same mixed-language form. Its appointment-booking behavior conflicts with the requested callback copy. Embedded headings/button text require a Lawmatics-side change; no account settings were changed.
-- Review Spanish adaptation and clarify whether the five local answers should be mapped into a corrected Wildfire form. No undocumented mapping was invented.
+- Samuel corrected the English embed on November 2 at 20:01 UTC. English now uses `00183874-c318-4b52-a528-f86368b354c3`; Spanish remains `2dea1e18-5ad9-4988-aa79-493af577f8c0`. Loader and options are unchanged. English has its own generated runtime asset so the Spanish HTML and runtime remain byte-identical.
+- The corrected English form renders **4.0 - EN Wildfire AOS LP Form**, English contact fields and an appointment calendar. The calendar still differs from the requested callback copy; phone and callback wording await client confirmation. No Lawmatics settings were changed.
+- User confirmed qualification answers are intentionally local gating before the appointment form and do not need mapping into Lawmatics. This is not a blocker. Spanish copy remains an adaptation for review.
 
 ## QA and deployment
 

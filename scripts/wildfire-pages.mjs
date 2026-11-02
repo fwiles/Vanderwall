@@ -6,11 +6,17 @@ import { disqualificationMessages } from '../lib/instant-schema.js';
 export async function buildWildfirePages(output, origin = '') {
   await mkdir(new URL('wildfire/', output), { recursive: true });
   await cp(new URL('../wildfire/wildfire.js', import.meta.url), new URL('wildfire/wildfire.js', output));
+  // Keep the Spanish runtime byte-identical; the corrected English embed gets its own asset.
+  const englishFormId = '00183874-c318-4b52-a528-f86368b354c3';
+  const spanishFormId = '2dea1e18-5ad9-4988-aa79-493af577f8c0';
+  const runtime = await readFile(new URL('../wildfire/wildfire.js', import.meta.url), 'utf8');
+  await writeFile(new URL('wildfire/wildfire-en.js', output), runtime.replaceAll(spanishFormId, englishFormId));
   for (const language of ['en', 'es']) {
     const prefix = language === 'es' ? 'es/' : '';
     const copy = wildfireCopy[language];
+    const formId = language === 'en' ? englishFormId : spanishFormId;
     let html = await readFile(new URL(`../${prefix}instant/index.html`, import.meta.url), 'utf8');
-    html = html.replace('/instant/instant.js', '/wildfire/wildfire.js');
+    html = html.replace('/instant/instant.js', language === 'en' ? '/wildfire/wildfire-en.js' : '/wildfire/wildfire.js');
     html = html.replace(/<h1 id="instant-title">[\s\S]*?<\/h1>/, `<h1 id="instant-title">${copy.title}</h1>`);
     html = html.replace(/(<h1 id="instant-title">[\s\S]*?<\/h1>\s*)<p>[\s\S]*?<\/p>/, `$1<p>${copy.subtitle}</p>\n<a class="btn btn--primary" href="#consult">${copy.cta}</a>`);
     html = html.replace(/(<a class="instant-nav-link"[^>]*>)[\s\S]*?<\/a>/, `$1${copy.cta}</a>`);
@@ -30,7 +36,7 @@ ${instantFields(language)}
 <section id="wf-embed" aria-labelledby="wf-embed-title" hidden>
 <h3 id="wf-embed-title" tabindex="-1">${language === 'es' ? 'Datos de contacto' : 'Contact details'}</h3>
 <div id="lm-embedded-script"></div>
-<p><a href="https://app.lawmatics.com/forms/embedded/2dea1e18-5ad9-4988-aa79-493af577f8c0" target="_blank" rel="noopener">${fallback}</a></p>
+<p><a href="https://app.lawmatics.com/forms/embedded/${formId}" target="_blank" rel="noopener">${fallback}</a></p>
 <button type="button" id="wf-edit" class="btn btn--primary">${back}</button>
 </section>`);
     html = html.replace(/href="\/(es\/)?instant\/"/g, (_, es) => `href="/${es || ''}instant-wf/"`);
