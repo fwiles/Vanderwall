@@ -1,0 +1,28 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { buildWildfirePages } from '../scripts/wildfire-pages.mjs';
+test('Wildfire isolates bilingual routes, intake and metadata', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'wildfire-test-'));
+  try {
+    await buildWildfirePages(pathToFileURL(dir + '/'), 'https://example.com');
+    for (const prefix of ['', 'es/']) {
+      const page = await readFile(join(dir, prefix, 'instant-wf/index.html'), 'utf8');
+      assert.match(page, /id="wf-form" hidden/);
+      assert.equal((page.match(/class="instant-step"/g) || []).length, 5);
+      assert.doesNotMatch(page, /\/api\/instant|\/instant\/instant.js|instant-form|INSTANT_FORM_FIELDS|DEPLOY_METADATA|NEW NUMBER|Wildfire phone pending/);
+      assert.match(page, /\/wildfire\/wildfire.js/);
+      assert.match(page, /href="tel:\+15032068414"/);
+      assert.ok(page.includes(`href="https://example.com/${prefix}instant-wf/"`));
+      assert.ok(page.includes(`href="/${prefix ? '' : 'es/'}instant-wf/"`));
+      assert.match(page, /GTM-KJ9SMN3/);
+      assert.match(page, /cdn.callrail.com\/companies\/256727770/);
+      assert.match(page, /2dea1e18-5ad9-4988-aa79-493af577f8c0/);
+    }
+    const js = await readFile(join(dir, 'wildfire/wildfire.js'), 'utf8');
+    assert.doesNotMatch(js, /fetch\(|instant-lead-confirmed|generate_lead/);
+  } finally { await rm(dir, { recursive: true, force: true }); }
+});

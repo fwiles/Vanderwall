@@ -77,3 +77,7 @@ for (const path of ['vsl/', 'es/vsl/']) {
   await writeFile(new URL(`${path}index.html`, output), vslHtml);
 }
 console.log('Built /vsl/ and /es/vsl/ with qualification questions, Lawmatics calendar and /vsl/thank-you/.');
+
+// Additive Wildfire routes; existing page generation remains unchanged.
+const { buildWildfirePages } = await import('./wildfire-pages.mjs');
+await buildWildfirePages(output, origin);
