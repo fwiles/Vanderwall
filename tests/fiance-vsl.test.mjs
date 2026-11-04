@@ -26,7 +26,7 @@ test('every combination proceeds to inactive booking; invalid choices do not adv
     assert.equal(nextStep(step, 'invalid'), step);
   }
   walk(0);
-  assert.equal(paths, 243);
+  assert.equal(paths, 324);
   const page = readFileSync('fiance-visas/vsl/index.html', 'utf8');
   assert.doesNotMatch(page, /a0860595-7233-408e-989e-fde9fbd1d926|SjeCq22yzIFJF0xC/);
   assert.match(page, /noindex, follow/);
@@ -34,7 +34,7 @@ test('every combination proceeds to inactive booking; invalid choices do not adv
 test('questions retain supplied English wording and order', () => {
   assert.deepEqual(questions.map(q => [q.title, q.options]), [
     ['Are you a U.S. citizen?', ['Yes', 'No', 'Not sure']],
-    ['Where is your fiancé(e) currently living?', ['Outside the United States', 'Inside the United States', 'Other / not sure']],
+    ['Where is your fiancé(e) currently living?', ['Outside the United States', 'Inside the United States', 'Other', 'not sure']],
     ['Are you currently legally married?', ['No', 'Yes', 'Not sure about our legal status']],
     ['Have you met in person within the past two years?', ['Yes', 'No', 'Not sure']],
     ['Would you be willing to invest $150 in a 45-minute consultation directly with an immigration attorney to discuss your case and immigration options?', [

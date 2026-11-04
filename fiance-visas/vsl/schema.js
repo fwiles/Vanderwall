@@ -2,7 +2,7 @@
 export const questionsApproved = false;
 export const questions = [
   { name: 'citizen', title: 'Are you a U.S. citizen?', options: ['Yes', 'No', 'Not sure'] },
-  { name: 'location', title: 'Where is your fiancé(e) currently living?', options: ['Outside the United States', 'Inside the United States', 'Other / not sure'] },
+  { name: 'location', title: 'Where is your fiancé(e) currently living?', options: ['Outside the United States', 'Inside the United States', 'Other', 'not sure'] },
   { name: 'married', title: 'Are you currently legally married?', options: ['No', 'Yes', 'Not sure about our legal status'] },
   { name: 'met', title: 'Have you met in person within the past two years?', options: ['Yes', 'No', 'Not sure'] },
   { name: 'consultation', title: 'Would you be willing to invest $150 in a 45-minute consultation directly with an immigration attorney to discuss your case and immigration options?', options: [
