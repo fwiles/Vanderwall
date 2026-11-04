@@ -15,7 +15,10 @@ test('Wildfire isolates bilingual routes, intake and metadata', async () => {
       assert.equal((page.match(/class="instant-step"/g) || []).length, 5);
       assert.doesNotMatch(page, /\/api\/instant|\/instant\/instant.js|instant-form|INSTANT_FORM_FIELDS|DEPLOY_METADATA|NEW NUMBER|Wildfire phone pending/);
       assert.ok(page.includes(prefix ? '/wildfire/wildfire.js' : '/wildfire/wildfire-en.js'));
-      assert.match(page, /href="tel:\+15032068414"/);
+      assert.doesNotMatch(page, /503\) 206-8414|15032068414/);
+      assert.match(page, /class="wf-hero-call"/);
+      assert.ok(page.includes(prefix ? '¿Prefiere hablar ahora?' : 'Prefer to talk now?'));
+      assert.match(page, /href="tel:\+13605640763"/);
       assert.ok(page.includes(`href="https://example.com/${prefix}instant-wf/"`));
       assert.ok(page.includes(`href="/${prefix ? '' : 'es/'}instant-wf/"`));
       assert.match(page, /GTM-KJ9SMN3/);

@@ -18,7 +18,7 @@ export async function buildWildfirePages(output, origin = '') {
     let html = await readFile(new URL(`../${prefix}instant/index.html`, import.meta.url), 'utf8');
     html = html.replace('/instant/instant.js', language === 'en' ? '/wildfire/wildfire-en.js' : '/wildfire/wildfire.js');
     html = html.replace(/<h1 id="instant-title">[\s\S]*?<\/h1>/, `<h1 id="instant-title">${copy.title}</h1>`);
-    html = html.replace(/(<h1 id="instant-title">[\s\S]*?<\/h1>\s*)<p>[\s\S]*?<\/p>/, `$1<p>${copy.subtitle}</p>\n<a class="btn btn--primary" href="#consult">${copy.cta}</a>`);
+    html = html.replace(/(<h1 id="instant-title">[\s\S]*?<\/h1>\s*)<p>[\s\S]*?<\/p>/, `$1<p>${copy.subtitle}</p>\n<a class="btn btn--primary" href="#consult">${copy.cta}</a>\n<p class="wf-hero-call">${copy.call} <a data-call="" href="tel:+13605640763" style="color: inherit;">${language === 'es' ? 'Llame al' : 'Call'} 360-564-0763</a></p>`);
     html = html.replace(/(<a class="instant-nav-link"[^>]*>)[\s\S]*?<\/a>/, `$1${copy.cta}</a>`);
     html = html.replace(/>Request Appointment<|>Solicitar cita</g, `>${copy.cta}<`);
     html = html.replace('<section class="instant-hero"', '<section id="top" class="instant-hero"');
@@ -44,6 +44,8 @@ ${instantFields(language)}
     const path = `${prefix}instant-wf/`;
     const metadata = origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/instant-wf/">\n<link rel="alternate" hreflang="es" href="${origin}/es/instant-wf/">` : '';
     html = html.replace('<!-- DEPLOY_METADATA -->', metadata);
+    // The supplied CallRail number belongs only to the two Wildfire routes.
+    html = html.replaceAll('(503) 206-8414', '360-564-0763').replaceAll('+15032068414', '+13605640763');
     await mkdir(new URL(path, output), { recursive: true });
     await writeFile(new URL(`${path}index.html`, output), html);
   }
