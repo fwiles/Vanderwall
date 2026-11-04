@@ -2,20 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { questions, questionsApproved, nextStep } from '../fiance-visas/vsl/schema.js';
-test('fiancé preview cannot activate intake or reuse spouse screening', () => {
+test('fiancé flow isolates its intake and does not reuse spouse screening', () => {
   const html = readFileSync('fiance-visas/vsl/index.html', 'utf8');
   const runtime = readFileSync('fiance-visas/vsl/preview.js', 'utf8');
   const template = html.match(/<template id="calendar-template">([\s\S]*?)<\/template>/)[1];
   assert.match(template, /9c9f0d5f-c64c-4b61-94d4-fb4ebb771220/);
   assert.doesNotMatch(html.replace(template,''), /lm_intake|navi\.lawmatics/);
-  assert.doesNotMatch(runtime, /createElement\(['"]script|fetch\(|lm_intake|loadCalendar|calendar-template/);
+  assert.doesNotMatch(runtime, /fetch\(|lm_intake|sendBeacon/);
   assert.doesNotMatch(html, /76942df5|wZI6hQDL8cobVxgW|href="\/book\/"|src="\/vsl\/vsl.js"/);
   assert.match(html, /huvcGAfeK4JoHBrx/);
-  assert.equal(questionsApproved, false);
+  assert.equal(questionsApproved, true);
   assert.equal(questions.length, 5);
 });
 
-test('every combination proceeds to inactive booking; invalid choices do not advance', () => {
+test('every combination proceeds to booking; invalid choices do not advance', () => {
   let paths = 0;
   function walk(step) {
     if (step === 5) { paths++; return; }

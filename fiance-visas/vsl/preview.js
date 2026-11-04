@@ -26,14 +26,23 @@ if (videoPlayer) {
   });
 }
 
-// No Lawmatics activation path: the supplied template remains inert.
+// Answers stay in memory. Only the supplied calendar is loaded, once, after Q5.
+const calendar = document.querySelector('#calendar-panel');
+function loadCalendar() {
+  if (document.querySelector('#lm-embedded-script')) return;
+  const source = document.querySelector('#calendar-template').content.querySelector('script');
+  const script = document.createElement('script');
+  script.id = source.id;
+  script.textContent = source.textContent;
+  document.querySelector('#calendar-embed').append(script);
+}
 const answers = {};
 let step = 0;
 function render() {
   panel.replaceChildren();
   const terminal = step === questions.length;
   document.querySelector('#step-label').textContent = terminal
-    ? 'Step 6 of 6 · Booking preview' : `Question ${step + 1} of ${questions.length}`;
+    ? 'Step 6 of 6 · Schedule your appointment' : `Question ${step + 1} of ${questions.length}`;
   const progress = document.querySelector('#step-progress');
   progress.hidden = false;
   progress.max = questions.length + 1;
@@ -41,12 +50,12 @@ function render() {
   progress.setAttribute('aria-label', 'Questionnaire progress');
   document.querySelector('#back-button').textContent = step ? '← Back' : '← Back to video';
   let heading;
+  calendar.hidden = !terminal;
+  panel.hidden = terminal;
+  document.querySelector('.vsl-card').classList.toggle('vsl-card--calendar', terminal);
   if (terminal) {
-    heading = document.createElement('h2');
-    heading.textContent = 'Booking preview — inactive';
-    const note = document.createElement('p');
-    note.textContent = 'The five questions are staged for review. Booking remains inactive pending approval. No answers have been sent and no appointment has been booked.';
-    panel.append(heading, note);
+    loadCalendar();
+    heading = document.querySelector('#calendar-title');
   } else {
     const question = questions[step];
     const fieldset = document.createElement('fieldset');
@@ -64,7 +73,11 @@ function render() {
       input.value = label;
       input.checked = answers[question.name] === label;
       input.addEventListener('click', event => {
-        if (event.detail > 1 || advancing || step !== renderedStep) return;
+        if (event.detail > 1 || advancing || step !== renderedStep) {
+          event.preventDefault();
+          heading.focus({ preventScroll: true });
+          return;
+        }
         advancing = true;
         answers[question.name] = label;
         step = nextStep(step, label);

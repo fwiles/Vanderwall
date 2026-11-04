@@ -1,5 +1,5 @@
-// Samuel's EN FIance Visa LP tab t.3tj1brblix8k. Supplied, not user-approved.
-export const questionsApproved = false;
+// Samuel's EN FIance Visa LP tab t.3tj1brblix8k. Supplied by Samuel; publication and activation approved by user.
+export const questionsApproved = true;
 export const questions = [
   { name: 'citizen', title: 'Are you a U.S. citizen?', options: ['Yes', 'No', 'Not sure'] },
   { name: 'location', title: 'Where is your fiancé(e) currently living?', options: ['Outside the United States', 'Inside the United States', 'Other', 'not sure'] },
