@@ -1,4 +1,4 @@
-import { questions, questionsApproved } from './schema.js';
+import { questions, nextStep } from './schema.js';
 const hero = document.querySelector('.vsl-hero');
 const reviews = document.querySelector('.vsl-reviews');
 const section = document.querySelector('#questions');
@@ -26,9 +26,67 @@ if (videoPlayer) {
   });
 }
 
-// This preview deliberately has no Lawmatics activation path. The exact snippet
-// is staged only in an inert template; approved questions alone cannot unlock it.
-function showFlow(open, focus = true) {
+// No Lawmatics activation path: the supplied template remains inert.
+const answers = {};
+let step = 0;
+function render() {
+  panel.replaceChildren();
+  const terminal = step === questions.length;
+  document.querySelector('#step-label').textContent = terminal
+    ? 'Step 6 of 6 · Booking preview' : `Question ${step + 1} of ${questions.length}`;
+  const progress = document.querySelector('#step-progress');
+  progress.hidden = false;
+  progress.max = questions.length + 1;
+  progress.value = step + 1;
+  progress.setAttribute('aria-label', 'Questionnaire progress');
+  document.querySelector('#back-button').textContent = step ? '← Back' : '← Back to video';
+  let heading;
+  if (terminal) {
+    heading = document.createElement('h2');
+    heading.textContent = 'Booking preview — inactive';
+    const note = document.createElement('p');
+    note.textContent = 'The five questions are staged for review. Booking remains inactive pending approval. No answers have been sent and no appointment has been booked.';
+    panel.append(heading, note);
+  } else {
+    const question = questions[step];
+    const fieldset = document.createElement('fieldset');
+    heading = document.createElement('legend');
+    heading.textContent = question.title;
+    fieldset.append(heading);
+    const renderedStep = step;
+    let advancing = false;
+    for (const label of question.options) {
+      const row = document.createElement('label');
+      row.className = 'vsl-option';
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = question.name;
+      input.value = label;
+      input.checked = answers[question.name] === label;
+      input.addEventListener('click', event => {
+        if (event.detail > 1 || advancing || step !== renderedStep) return;
+        advancing = true;
+        answers[question.name] = label;
+        step = nextStep(step, label);
+        render();
+      });
+      const text = document.createElement('span');
+      text.textContent = label;
+      row.append(input, text);
+      fieldset.append(row);
+    }
+    panel.append(fieldset);
+    if (step === questions.length - 1) {
+      const note = document.createElement('p');
+      note.textContent = 'The team intake appointment is free. An attorney consultation is a separate option. Selecting an answer does not authorize a payment.';
+      panel.append(note);
+    }
+  }
+  heading.tabIndex = -1;
+  heading.focus({ preventScroll: true });
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+function showFlow(open) {
   started = open;
   if (open) videoPlayer?.pause();
   hero.hidden = open;
@@ -36,21 +94,8 @@ function showFlow(open, focus = true) {
   section.hidden = !open;
   quiz.hidden = !open;
   document.body.classList.toggle('vsl-flow', open);
-  if (open) {
-    document.querySelector('#step-label').textContent = 'Intake questionnaire · Pending approval';
-    panel.replaceChildren();
-    const title = document.createElement('h2');
-    title.id = 'pending-title';
-    title.tabIndex = -1;
-    title.textContent = 'Your intake questions will appear here';
-    const note = document.createElement('p');
-    note.textContent = !questionsApproved || questions.length === 0
-      ? 'Samuel’s fiancé visa questions are pending. This review preview does not collect answers or load the booking form.'
-      : 'Questions are staged for review. Booking remains inactive until the full flow is approved.';
-    panel.append(title, note);
-    if (focus) title.focus({ preventScroll: true });
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  } else if (focus) startButton.focus();
+  if (open) render();
+  else startButton.focus();
 }
 startButton.addEventListener('click', () => {
   if (started) return;
@@ -62,8 +107,11 @@ function returnToVideo() {
   if (history.state?.fiancePreview) history.back();
   else { history.replaceState(null, '', location.pathname + location.search); showFlow(false); }
 }
-document.querySelector('#back-button').addEventListener('click', returnToVideo);
+document.querySelector('#back-button').addEventListener('click', event => {
+  if (event.detail > 1) return;
+  if (step > 0) { step--; render(); } else returnToVideo();
+});
 document.addEventListener('keydown', event => { if (event.key === 'Escape') returnToVideo(); });
 window.addEventListener('popstate', () => showFlow(location.hash === '#questions'));
 startButton.hidden = false;
-showFlow(location.hash === '#questions', location.hash === '#questions');
+if (location.hash === '#questions') showFlow(true);
