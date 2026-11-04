@@ -81,3 +81,10 @@ console.log('Built /vsl/ and /es/vsl/ with qualification questions, Lawmatics ca
 // Additive Wildfire routes; existing page generation remains unchanged.
 const { buildWildfirePages } = await import('./wildfire-pages.mjs');
 await buildWildfirePages(output, origin);
+
+// Separate, inactive fiancé VSL review; does not alter existing pages.
+await cp(new URL('../fiance-visas/vsl/', import.meta.url), new URL('fiance-visas/vsl/', output), { recursive: true });
+const fiancePath = new URL('fiance-visas/vsl/index.html', output);
+let fianceHtml = await readFile(fiancePath, 'utf8');
+fianceHtml = fianceHtml.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/fiance-visas/vsl/">` : '');
+await writeFile(fiancePath, fianceHtml);
