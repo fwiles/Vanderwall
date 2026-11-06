@@ -26,6 +26,7 @@ export async function buildServicePages(output, origin) {
       html = replace(html, /<p class="hero__lead">[\s\S]*?<\/p>/, `<p class="hero__lead">${escape(c.lead)}</p>`);
       html = replace(html, /<ul class="checks">[\s\S]*?<\/ul>/, `<ul class="checks">${c.checks.map(check).join('\n')}</ul>`);
       html = replace(html, /<h2 class="form-card__title">[\s\S]*?<\/h2>/, `<h2 class="form-card__title">${escape(c.formTitle)}</h2>`);
+      if (c.formIntro) html = replace(html, /<p class="form-card__note">[\s\S]*?<\/p>/, `<p class="form-card__note">${escape(c.formIntro)}</p>`);
       const form = `<form action="/${prefix}book/" class="form" method="get" autocomplete="off">
 ${c.questions.map(([label, options], i) => `<div class="field"><label for="service-question-${i}">${escape(label)}</label>
 <select id="service-question-${i}" required><option value="" disabled selected>${es ? 'Seleccione una opción' : 'Select an option'}</option>

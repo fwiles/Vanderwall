@@ -1,3 +1,6 @@
+import { questions as fianceQuestionsEn } from '../fiance-visas/vsl/schema.js';
+import { questions as fianceQuestionsEs } from '../es/fiance-visas/vsl/schema.js';
+
 // Service landing copy. Research and claim mapping: copy/service-landing-research.html.
 const sources = {
   fiance: 'https://travel.state.gov/content/travel/en/us-visas/immigrate/family-immigration/nonimmigrant-visa-for-a-fiance-k-1.html',
@@ -18,10 +21,8 @@ export const servicePages = [
       lead: 'Ready to bring your fiancé to the United States? Already married and comparing your options? Vanderwall Immigration helps you understand the path ahead, prepare your case and take the next step together.',
       checks: ['A plan for your relationship, your timeline and your next chapter.', 'Help organizing relationship evidence and visa paperwork.', 'English and Spanish support from offices in Beaverton and Salem.'],
       formTitle: 'Let’s talk about your future together',
-      questions: [
-        ['Which best describes your relationship?', ['Engaged / planning to marry — interested in a K-1', 'Already married — interested in a spouse visa', 'Entered with a K-1 and now need a green card', 'Not sure which path fits us']],
-        ['Where is the partner who needs immigration help?', ['Outside the United States', 'Inside the United States', 'Not sure how to describe our situation']]
-      ],
+      formIntro: 'Answer five quick questions, then book a free appointment with our intake team.',
+      questions: fianceQuestionsEn.map(({ title, options }) => [title, options]),
       servicesTitle: 'From “which visa?” to a plan you understand',
       servicesLead: 'You should know what comes next before making life-changing plans.',
       services: [
@@ -57,10 +58,8 @@ export const servicePages = [
       lead: '¿Quiere traer a su prometido(a) a Estados Unidos? ¿Ya están casados y están comparando opciones? Vanderwall Immigration le ayuda a entender el camino, preparar su caso y dar el siguiente paso en pareja.',
       checks: ['Un plan que tenga en cuenta su relación, sus tiempos y su futuro.', 'Ayuda para organizar las pruebas de su relación y los documentos.', 'Atención en español e inglés, con oficinas en Beaverton y Salem.'],
       formTitle: 'Hablemos de su futuro juntos',
-      questions: [
-        ['¿Cuál opción describe mejor su relación?', ['Estamos comprometidos o planeamos casarnos — visa K-1', 'Ya estamos casados — visa para cónyuge', 'Entré con una K-1 y ahora necesito la residencia', 'No sabemos qué opción nos corresponde']],
-        ['¿Dónde está la persona que necesita ayuda migratoria?', ['Fuera de Estados Unidos', 'Dentro de Estados Unidos', 'No sé cómo describir nuestra situación']]
-      ],
+      formIntro: 'Responda cinco preguntas breves y luego reserve una cita gratuita con nuestro equipo de admisión.',
+      questions: fianceQuestionsEs.map(({ title, options }) => [title, options]),
       servicesTitle: 'De las dudas sobre visas a un plan claro',
       servicesLead: 'Conozca los próximos pasos antes de tomar decisiones que cambiarán su vida.',
       services: [
