@@ -35,7 +35,7 @@ test('deployment emits clean bilingual static output and safe configuration', ()
         assert.ok(page.includes(`class="site-header__lang" href="/${lang === 'es' ? '' : 'es/'}${slug}/"`));
         const form = page.match(/<form[\s\S]*?<\/form>/)[0];
         assert.ok(form.includes(`action="/${prefix}book/"`));
-        assert.equal((form.match(/<select[^>]* required>/g) || []).length, slug === 'fiance-visas' ? 5 : 2);
+        assert.equal((form.match(/<select[^>]* required>/g) || []).length, 2);
         assert.doesNotMatch(form, /\bname=|\/api\//, 'service answers must not be transmitted');
         assert.match(page, /GTM-KJ9SMN3/);
         assert.match(page, /cdn.callrail.com\/companies\/256727770/);
