@@ -44,6 +44,7 @@ function startFlow() {
 }
 
 function loadCalendar() {
+  document.dispatchEvent(new Event('booking-calendar-opened'));
   if (document.querySelector('#lm-embedded-script')) return;
   const source = document.querySelector('#calendar-template').content.querySelector('script');
   const script = document.createElement('script');

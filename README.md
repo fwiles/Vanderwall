@@ -12,7 +12,7 @@ English at `/`, Spanish at `/es/`. Preserves the supplied navy/teal design and r
 
 ## Two-question booking flow
 
-Booking confirmation pages are available at `/thank-you/` (English) and `/es/thank-you/` (Spanish). They include the call button and pull the matching landing page's existing reviews and footer at build time. After deployment, configure each Lawmatics calendar's successful-booking redirect to the matching absolute URL on the live site. The redirect is managed in Lawmatics and is not configured by this repository. Visits to these pages do not automatically emit a lead conversion.
+Booking confirmation pages are available at `/thank-you/` (English) and `/es/thank-you/` (Spanish). They include the call button and pull the matching landing page's existing reviews and footer at build time. After deployment, configure each Lawmatics calendar's successful-booking redirect to the matching absolute URL on the live site. The redirect is managed in Lawmatics and is not configured by this repository. These pages send the server-side `custom_schedule` event only with a matching prior booking journey; see Meta booking tracking below.
 
 The main landing pages ask only what the visitor needs help with and a brief description. Both questions are required to continue. These introductory answers are deliberately not saved, transmitted, included in URLs, or passed to Lawmatics. The controls have no `name` attributes, so native GET navigation also excludes their values when JavaScript is unavailable. The booking embed itself requires JavaScript and includes a phone fallback.
 
@@ -108,7 +108,7 @@ The six questions and service-fit rules live in `lib/vsl-schema.js`. Disqualifyi
 
 The final step loads the supplied Lawmatics calendar `76942df5-f58d-421c-b1f2-2095353f4a6d` once the visitor completes the qualifying questions. Returning to earlier questions preserves the calendar. Questionnaire answers remain in memory only and are not passed to Lawmatics or analytics; contact information and booking are handled within the embed.
 
-The VSL confirmation page is `/vsl/thank-you/`, with shared reviews, footer, and phone support. After deployment, set this calendar’s successful-booking redirect in Lawmatics to the absolute live-site URL ending in `/vsl/thank-you/`. This redirect is managed in Lawmatics, not in this repository. Page visits do not automatically emit a lead conversion.
+The VSL confirmation page is `/vsl/thank-you/`, with shared reviews, footer, and phone support. After deployment, set this calendar’s successful-booking redirect in Lawmatics to the absolute live-site URL ending in `/vsl/thank-you/`. This redirect is managed in Lawmatics, not in this repository. The page sends server-side `custom_schedule` only with a matching prior VSL calendar journey.
 
 Preview: `npm run dev`, then open `http://localhost:3000/vsl/`. The development server supports byte-range requests for video playback and seeking.
 
@@ -126,3 +126,18 @@ Edit service copy in `services/content.mjs`. `scripts/service-pages.mjs` renders
 Each service form has two required selections: relationship or case stage, then applicant location. All choices continue to the same `/book/` or `/es/book/` calendar, with no screening or eligibility determination. Answers are not saved, transmitted, or added to URLs/analytics. The form explains this and distinguishes the free intake appointment from an attorney consultation. Existing Lawmatics embed IDs and confirmation setup are unchanged.
 
 Research, official sources and copy rationale are in `copy/service-landing-research.html` (internal only). FAQs include relevant official-source links. These pages retain the site's paid-traffic `noindex` policy. Build checks cover all four routes, localized calendar destinations, metadata, anchors, assets and tracking snippets.
+
+
+## Meta booking tracking
+
+`meta-schedule.js` captures Meta click/browser attribution in session storage and initializes a signed, 24-hour journey on `/book/`, `/es/book/`, or when the VSL calendar opens. Matching redirects to `/thank-you/`, `/es/thank-you/`, and `/vsl/thank-you/` call `/api/meta-schedule`. Both VSL languages currently map to `/vsl/thank-you/`. Verify actual Lawmatics redirects before enabling production tracking. Embeds and their fields are unchanged.
+
+The server sends `PageView` on each document load and `custom_schedule` on the matching booking confirmation, with hardcoded `event_source_url` **https://app.vanderwallimmigration.com/**. No browser Meta pixel events or additional Lead events are added. PageView uses a unique ID per document load; repeat requests with the same ID are deduplicated in Redis. A refresh is a new PageView. Only fbc, fbp, IP, and user agent are sent for matching; no contact details, screening answers, query strings, or form payloads are forwarded. Existing GTM-managed tags are external and must be audited separately.
+
+Required server variables: `META_CAPI_ACCESS_TOKEN`, `META_DATASET_ID`, `META_GRAPH_API_VERSION` (default v25.0), `UPSTASH_REDIS_REST_URL`, and `UPSTASH_REDIS_REST_TOKEN`. The Vercel Marketplace aliases `KV_REST_API_URL` and `KV_REST_API_TOKEN` are also supported. Redis must retain keys without eviction for the two-day deduplication window. Secrets never enter the static build. Production is enabled by Vercel's production environment; preview/local requires `META_TEST_EVENT_CODE`. Remove the test code before sending production events.
+
+A persistent atomic Redis claim prevents concurrent requests, reloads, or multiple function instances from sending the same journey twice. Ambiguous failures and rejected deliveries retain the claim and log the event ID for review; there is no automatic retry to Meta. This deliberately favors avoiding duplicate conversions over recovering possibly lost events. A failed tracking request does not affect the booking confirmation.
+
+This is redirect-based measurement, not independent booking verification. A visitor who opens the booking flow and manually visits its confirmation page can still produce an event. JavaScript, session storage, a same-origin same-tab redirect, and a journey under 24 hours are required. Direct confirmation visits without a journey are ignored. Multiple bookings in one active journey count once; returning after a recorded confirmation starts a new journey. Consent controls, if used, must govern both attribution capture and the tracking endpoint.
+
+Validation: `npm test` exercises signed tickets, route matching, concurrent/repeat delivery, fixed source URL, payload exclusion, missing configuration, and ambiguous upstream failures. Live Meta Test Events and actual Lawmatics redirects still require verification on the configured deployment.

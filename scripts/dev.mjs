@@ -5,6 +5,7 @@ import { createReadStream } from 'node:fs';
 import { resolve, extname, sep } from 'node:path';
 import handler from '../api/consultation.js';
 import instantHandler from '../api/instant.js';
+import metaHandler from '../api/meta-schedule.js';
 const root = resolve('dist');
 const port = Number(process.env.PORT || 3000);
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.png': 'image/png', '.ico': 'image/x-icon', '.txt': 'text/plain', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' };
@@ -13,6 +14,7 @@ createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost');
   if (url.pathname.replace(/\/$/, '') === '/api/consultation') return handler(req, res);
   if (url.pathname.replace(/\/$/, '') === '/api/instant') return instantHandler(req, res);
+  if (url.pathname.replace(/\/$/, '') === '/api/meta-schedule') return metaHandler(req, res);
   let pathname;
   try { pathname = decodeURIComponent(url.pathname); } catch { res.writeHead(400).end(); return; }
   const path = resolve(root, '.' + pathname + (pathname.endsWith('/') ? 'index.html' : ''));
