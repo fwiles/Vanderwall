@@ -1,0 +1,26 @@
+# Wildfire landing pages
+
+New routes: `/instant-wf/` and `/es/instant-wf/`. Built by `scripts/wildfire-pages.mjs` during the normal build, from the existing instant templates. Only the build entry point changes among existing files. Current page HTML, scripts, forms, tracking and URLs are untouched.
+
+Baseline: `cf83839`, fetched from origin/main November 2, 2026. Isolated working copy branch: `wildfire-draft`. Original desktop checkout is untouched, including its pre-existing deleted `.aws` entry.
+
+English headline, subhead, CTA, form heading and intro follow Samuel's November 2 email. Spanish is a faithful adaptation for review. Source content: `wildfire/content.mjs`.
+
+The five existing qualification questions and screening rules are preserved. Qualified visitors then see the supplied Wildfire Lawmatics embed. Qualification answers stay in browser memory and are not sent to the original `/api/instant`, Lawmatics, URLs or analytics. The supplied embed has no documented mapping for those answers. Contact details and booking are handled by Lawmatics. No conversion is emitted merely for reaching the embed. Existing GTM/CallRail and phone-click behavior are inherited; external container/number configuration was not changed.
+
+## Items for Samuel to confirm
+
+- The user deferred the new phone number. Existing `(503) 206-8414` is unchanged, **not a new Wildfire tracking number**. The added “Prefer to talk now? Call NEW NUMBER” CTA was omitted. Existing source-page phone links remain.
+- Samuel corrected the English embed on November 2 at 20:01 UTC. English now uses `00183874-c318-4b52-a528-f86368b354c3`; Spanish remains `2dea1e18-5ad9-4988-aa79-493af577f8c0`. Loader and options are unchanged. English has its own generated runtime asset so the Spanish HTML and runtime remain byte-identical.
+- The corrected English form renders **4.0 - EN Wildfire AOS LP Form**, English contact fields and an appointment calendar. The calendar still differs from the requested callback copy; phone and callback wording await client confirmation. No Lawmatics settings were changed.
+- User confirmed qualification answers are intentionally local gating before the appointment form and do not need mapping into Lawmatics. This is not a blocker. Spanish copy remains an adaptation for review.
+
+## QA and deployment
+
+Run `npm test` and `npm run build`. Local preview: serve `dist/`, then visit the two new routes. Existing output files are compared byte-for-byte against the pre-change build; only two page routes and `/wildfire/wildfire.js` are added.
+
+Browser QA traversed all five English questions using synthetic selections, verified the supplied embed loads, and checked Back preserves the selected answer. No embedded contact fields were entered and no lead was submitted. Automated checks cover routes, bilingual metadata/links, original phone/tracking retention and absence of the old intake endpoint on the new pages.
+
+User authorized production publication of the new routes on November 2, 2026 after being informed of the form, mapping and phone caveats. Email remains on hold. The established production hostname is `https://go.vanderwallimmigration.com`; the two routes are `/instant-wf/` and `/es/instant-wf/`.
+
+The earlier Vercel Preview deployment is Ready at https://vanderwall-aymmdveku-the-blueprint-training.vercel.app (deployment dpl_CqbbFLsXa8XwYEisNMgzSHn6tpkh); unauthenticated visitors are redirected to Vercel login. Desktop/mobile screenshots are in Library. An earlier `vercel curl` check unexpectedly generated an automation bypass token; that exact token was subsequently revoked with explicit user authorization, without regeneration. Read-only verification confirmed zero remaining bypass tokens and unchanged deployment protection. Do not use `vercel curl` for verification because it may generate credentials automatically. Use ordinary public HTTP requests.

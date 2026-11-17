@@ -77,3 +77,16 @@ for (const path of ['vsl/', 'es/vsl/']) {
   await writeFile(new URL(`${path}index.html`, output), vslHtml);
 }
 console.log('Built /vsl/ and /es/vsl/ with qualification questions, Lawmatics calendar and /vsl/thank-you/.');
+
+// Additive Wildfire routes; existing page generation remains unchanged.
+const { buildWildfirePages } = await import('./wildfire-pages.mjs');
+await buildWildfirePages(output, origin);
+
+// Isolated bilingual fiancé VSL reviews; booking remains inactive.
+for (const path of ['fiance-visas/vsl/', 'es/fiance-visas/vsl/']) {
+  await cp(new URL(`../${path}`, import.meta.url), new URL(path, output), { recursive: true });
+  const page = new URL(`${path}index.html`, output);
+  let html = await readFile(page, 'utf8');
+  html = html.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/fiance-visas/vsl/">\n<link rel="alternate" hreflang="es" href="${origin}/es/fiance-visas/vsl/">` : '');
+  await writeFile(page, html);
+}
