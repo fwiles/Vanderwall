@@ -1,0 +1,30 @@
+.pip-video {
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  margin-top: 24px;
+  padding: 24px;
+  background: var(--navy-deep);
+  box-shadow: 0 0 0 1px #ffffff33, 0 16px 45px #001b2b55;
+  border-radius: 4px;
+  text-align: center;
+}
+.pip-video p {
+  margin: 0;
+  max-width: 22ch;
+  color: white;
+  font-family: var(--display);
+  font-size: clamp(18px, 2.4vw, 28px);
+  line-height: 1.25;
+}
+.pip-points { max-width: 680px; margin: 28px auto 4px; text-align: left; }
+.pip-points li { display: flex; gap: 12px; align-items: flex-start; color: var(--on-dark); padding: 7px 0; }
+.pip-points .icon { color: var(--teal); margin-top: 4px; }
+.pip-attorney { background: #f1f6f4; padding: 8px 20px 48px; }
+#form-title { color: var(--navy); font-size: 28px; margin: 0 0 12px; }
+#form-embed { min-height: 460px; }
+#form-embed iframe { width: 100%; border: 0; }
+@media (max-width: 600px) {
+  .pip-video { margin-top: 12px; padding: 16px; }
+  .pip-points { margin-top: 18px; }
+}
