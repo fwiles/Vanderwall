@@ -90,3 +90,13 @@ for (const path of ['fiance-visas/vsl/', 'es/fiance-visas/vsl/']) {
   html = html.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/${path}">\n<link rel="alternate" hreflang="en" href="${origin}/fiance-visas/vsl/">\n<link rel="alternate" hreflang="es" href="${origin}/es/fiance-visas/vsl/">` : '');
   await writeFile(page, html);
 }
+
+// Unlinked English preview. No navigation, sitemap entry, or Spanish alternate.
+{
+  const path = 'military-parole-in-place/vsl/';
+  await cp(new URL(`../${path}`, import.meta.url), new URL(path, output), { recursive: true });
+  const page = new URL(`${path}index.html`, output);
+  let html = await readFile(page, 'utf8');
+  html = html.replace('<!-- DEPLOY_METADATA -->', origin ? `<link rel="canonical" href="${origin}/${path}">` : '');
+  await writeFile(page, html);
+}
