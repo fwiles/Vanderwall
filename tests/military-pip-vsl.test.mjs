@@ -36,7 +36,6 @@ test('military parole page is an unlinked English preview with the supplied copy
     'One immigration contact you can hand to recruits and their families.',
     'We explain the Military Parole in Place process and which documents families usually gather.',
     'Bilingual English/Spanish support for families.',
-    'Offices in Beaverton and Salem, Oregon, with remote appointments.',
     'Families get a free intake appointment to see whether we can help.',
     'Connect Your Recruits With Our Team',
     'Prefer to talk? Call',
@@ -51,6 +50,7 @@ test('military parole page is an unlinked English preview with the supplied copy
     'Attorney advertising.',
     '(503) 206-8414'
   ]) assert.ok(html.includes(line), line);
+  assert.doesNotMatch(html, /Offices in Beaverton and Salem, Oregon, with remote appointments\./);
   assert.doesNotMatch(html, /approval rate|filing fee|within \d+ (?:days|weeks|months)/i);
   const template = html.match(/<template id="form-template">([\s\S]*?)<\/template>/)[1];
   assert.match(template, /lm_intake\("a7c05e63-5862-4761-8878-2078a14dc601"/);
