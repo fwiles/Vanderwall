@@ -23,9 +23,13 @@ test('military parole page is an unlinked English preview with the supplied copy
   assert.match(html, /noindex, follow/);
   assert.match(html, /GTM-KJ9SMN3/);
   assert.match(html, /cdn\.callrail\.com\/companies\/256727770\/26a3c72a70db842de287\/12\/swap\.js/);
-  assert.doesNotMatch(html, /meta-schedule\.js|vidalytics|wZI6hQDL8cobVxgW|huvcGAfeK4JoHBrx|a60BQc8vPeYvF_w3|SjeCq22yzIFJF0xC/);
+  assert.doesNotMatch(html, /meta-schedule\.js|wZI6hQDL8cobVxgW|huvcGAfeK4JoHBrx|a60BQc8vPeYvF_w3|SjeCq22yzIFJF0xC/);
   assert.doesNotMatch(html, /site-header__lang|href="\/es\/|thank-you/);
-  assert.match(html, /VIDEO PLACEHOLDER: new Military PIP VSL coming soon/);
+  assert.doesNotMatch(html, /VIDEO PLACEHOLDER|pip-video/);
+  assert.match(html, /class="vsl-player"/);
+  assert.match(html, /id="vidalytics_embed_xdVYMgmKDjSB0SYH"/);
+  assert.match(html, /padding-top: 56\.25%/);
+  assert.match(html, /https:\/\/fast\.vidalytics\.com\/embeds\/e24TCOvn\/xdVYMgmKDjSB0SYH\//);
   assert.match(html, /Help Your Recruits' Families Navigate <span>Military Parole in Place<\/span>/);
   assert.match(html, /so you can point recruits to one firm\./);
   for (const line of [
@@ -63,5 +67,5 @@ test('the recruiter button loads the contact form once and adds no tracking', ()
   assert.match(runtime, /form-template/);
   assert.doesNotMatch(runtime, /dataLayer|booking-calendar-opened|dispatchEvent|fetch\(|sendBeacon|XMLHttpRequest|localStorage|sessionStorage|fbq\(|gtag\(|meta-schedule|thank-you/);
   assert.match(runtime, /event\.detail > 1/);
-  assert.match(readFileSync(root + 'page.css', 'utf8'), /aspect-ratio: 16 \/ 9/);
+  assert.doesNotMatch(readFileSync(root + 'page.css', 'utf8'), /pip-video|aspect-ratio/);
 });
