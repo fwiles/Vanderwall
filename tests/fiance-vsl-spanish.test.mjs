@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { questions, questionsApproved, nextStep } from '../es/fiance-visas/vsl/schema.js';
-import { questions as enQuestions, nextStep as enNextStep } from '../fiance-visas/vsl/schema.js';
+import { questions, questionsApproved, nextStep, isDisqualified, disqualificationMessage } from '../es/fiance-visas/vsl/schema.js';
+import { questions as enQuestions, nextStep as enNextStep, isDisqualified as enIsDisqualified, disqualificationMessage as enDisqualificationMessage } from '../fiance-visas/vsl/schema.js';
 test('Spanish fiancé questions preserve source wording, order and four location choices', () => {
   assert.equal(questionsApproved, true);
   assert.deepEqual(questions.map(q => [q.title, q.options]), [
@@ -17,15 +17,35 @@ test('Spanish fiancé questions preserve source wording, order and four location
     ]]
   ]);
 });
-test('all 324 paths in each language proceed with no answer submission path', () => {
-  for (const [qs, next] of [[questions, nextStep], [enQuestions, enNextStep]]) {
-    let paths = 0;
+test('option C disqualifies in each language; every other path still reaches booking', () => {
+  assert.equal(disqualificationMessage, 'Según sus respuestas, no podemos ofrecerle una consulta a través de este formulario. Su solicitud no se ha enviado.');
+  assert.equal(enDisqualificationMessage, "Based on your answers, we're not able to offer a consultation through this form. Your request has not been sent.");
+  for (const [qs, next, stopped, free] of [
+    [questions, nextStep, isDisqualified, 'C. Busco ayuda migratoria gratuita o pro bono.'],
+    [enQuestions, enNextStep, enIsDisqualified, 'C. I am looking for free or pro bono immigration assistance.']
+  ]) {
+    let qualified = 0;
+    let disqualified = 0;
     function walk(step) {
-      if (step === 5) { paths++; return; }
-      for (const choice of qs[step].options) { assert.equal(next(step, choice), step + 1); walk(next(step, choice)); }
+      if (step === 5) { qualified++; return; }
+      for (const choice of qs[step].options) {
+        if (stopped({ [qs[step].name]: choice })) {
+          assert.equal(choice, free);
+          assert.equal(qs[step].name, 'consultation');
+          assert.equal(next(step, choice), step);
+          disqualified++;
+          continue;
+        }
+        assert.equal(next(step, choice), step + 1);
+        walk(step + 1);
+      }
       assert.equal(next(step, 'INVALID'), step);
     }
-    walk(0); assert.equal(paths, 324);
+    walk(0);
+    assert.equal(qualified, 216);
+    assert.equal(disqualified, 108);
+    assert.equal(stopped({ consultation: qs.at(-1).options[0] }), false);
+    assert.equal(stopped({ consultation: qs.at(-1).options[1] }), false);
   }
   for (const [prefix, other, id, video] of [
     ['', 'es/', '9c9f0d5f-c64c-4b61-94d4-fb4ebb771220', 'huvcGAfeK4JoHBrx'],
@@ -40,7 +60,13 @@ test('all 324 paths in each language proceed with no answer submission path', ()
     assert.ok(html.includes(`class="site-header__lang" href="/${other}fiance-visas/vsl/"`));
     assert.match(html, /noindex, follow/);
     assert.doesNotMatch(html.replace(template,''), /lm_intake|navi\.lawmatics/);
-    assert.doesNotMatch(runtime, /fetch\(|lm_intake|isDisqualified|disqualification|localStorage|sessionStorage|sendBeacon|XMLHttpRequest|dataLayer/);
+    const title = prefix === 'es/' ? 'Gracias por compartir su situación' : 'Thank you for sharing your situation';
+    assert.match(runtime, new RegExp(`if \\(isDisqualified\\(answers\\)\\) \\{\\s*finish\\('${title}', disqualificationMessage\\);\\s*return;\\s*\\}`));
+    const finish = runtime.slice(runtime.indexOf('function finish'), runtime.indexOf('function render'));
+    assert.match(finish, /calendar\.hidden = true/);
+    assert.match(finish, /quiz\.hidden = true/);
+    assert.doesNotMatch(finish, /loadCalendar|dataLayer|booking-calendar-opened|dispatchEvent|fetch\(|lm_intake/);
+    assert.doesNotMatch(runtime, /fetch\(|lm_intake|localStorage|sessionStorage|sendBeacon|XMLHttpRequest|dataLayer|booking-calendar-opened|fbq\(|gtag\(/);
     assert.match(runtime, /event.detail > 1/);
     assert.match(runtime, /if \(terminal\) \{\s*loadCalendar\(\)/);
     assert.match(runtime, /if \(document.querySelector\('#lm-embedded-script'\)\) return/);

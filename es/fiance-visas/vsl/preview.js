@@ -1,4 +1,4 @@
-import { questions, nextStep } from './schema.js';
+import { questions, nextStep, isDisqualified, disqualificationMessage } from './schema.js';
 const hero = document.querySelector('.vsl-hero');
 const reviews = document.querySelector('.vsl-reviews');
 const section = document.querySelector('#questions');
@@ -26,7 +26,7 @@ if (videoPlayer) {
   });
 }
 
-// Answers stay in memory. Only the supplied calendar is loaded, once, after Q5.
+// Answers stay in memory. The supplied calendar loads once, after a qualifying answer to Q5.
 const calendar = document.querySelector('#calendar-panel');
 function loadCalendar() {
   if (document.querySelector('#lm-embedded-script')) return;
@@ -38,7 +38,20 @@ function loadCalendar() {
 }
 const answers = {};
 let step = 0;
+function finish(title, message) {
+  calendar.hidden = true;
+  quiz.hidden = true;
+  const result = document.querySelector('#vsl-result');
+  result.hidden = false;
+  const heading = document.querySelector('#result-title');
+  heading.textContent = title;
+  document.querySelector('#result-message').textContent = message;
+  heading.focus({ preventScroll: true });
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
 function render() {
+  document.querySelector('#vsl-result').hidden = true;
+  quiz.hidden = false;
   panel.replaceChildren();
   const terminal = step === questions.length;
   document.querySelector('#step-label').textContent = terminal
@@ -80,6 +93,11 @@ function render() {
         }
         advancing = true;
         answers[question.name] = label;
+        // Stop immediately for the free or pro bono consultation answer.
+        if (isDisqualified(answers)) {
+          finish('Gracias por compartir su situación', disqualificationMessage);
+          return;
+        }
         step = nextStep(step, label);
         render();
       });
